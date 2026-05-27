@@ -1,7 +1,7 @@
 export const students = [
   {
     id: 1,
-    learnerName: "Luke Moraity",
+    learnerName: "Tom Jones",
     location: "Melbourne",
     courseName: "Diploma of Leadership and Management",
     courseType: "qualification",
