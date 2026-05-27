@@ -1,0 +1,145 @@
+.home {
+  /* border: 1px solid red; */
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 512px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.header .welcome {
+  position: relative;
+  background-color: var(--primary-color);
+  background-image: url("../assets/placeholder.jpg");
+  background-size: cover;
+  background-position: center;
+  border-radius: 25px;
+  padding: 2rem;
+}
+
+.header .welcome::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+  z-index: 0;
+  background: #15134f;
+  background: -webkit-linear-gradient(
+    90deg,
+    rgba(21, 19, 79, 1) 0%,
+    rgba(21, 19, 79, 0.1) 100%
+  );
+  background: -moz-linear-gradient(
+    90deg,
+    rgba(21, 19, 79, 1) 0%,
+    rgba(21, 19, 79, 0.1) 100%
+  );
+  background: linear-gradient(
+    90deg,
+    rgba(21, 19, 79, 1) 0%,
+    rgba(21, 19, 79, 0.1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#15134F", endColorstr="#15134F", GradientType=1);
+}
+
+.header .welcome h1 {
+  color: #ffffff;
+  position: relative;
+}
+
+.header .welcome p {
+  position: relative;
+  color: #ffffff;
+  line-height: 1.5;
+  font-weight: 300;
+  max-width: 400px;
+  margin: 1rem 0 0;
+}
+
+.header .activity {
+  position: relative;
+  background-color: #ffffff;
+  box-shadow: 10px 10px 80px -15px #e7e4e8ae;
+  border-radius: 25px;
+  padding: 2rem;
+}
+
+.header .activity ul {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.header .activity ul li {
+  position: relative;
+  font-size: 1rem;
+  padding: 18px 0 0 1.5rem;
+  color: var(--primary-color);
+}
+
+.header .activity ul li span {
+  font-weight: 500;
+}
+
+.header .activity ul li::before {
+  content: "";
+  background: var(--accent-color);
+  box-shadow: 0px 0px 5px var(--accent-color);
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  z-index: 99999;
+  position: absolute;
+  top: 26px;
+  left: 0;
+}
+
+.header .activity ul li.risk::before {
+  content: "";
+  background: var(--risk-color);
+  box-shadow: 0px 0px 5px var(--risk-color);
+}
+
+.key-insights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 0;
+}
+
+.key-insights .insight {
+  padding: 2rem 3rem;
+  margin-block: 1.5rem;
+  border-right: 1px solid #e7e4e8ae;
+}
+
+.key-insights .insight:last-child {
+  border-right: none;
+}
+
+.key-insights .insight .icon {
+  position: relative;
+  display: inline-block;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+}
+
+.key-insights .insight .icon svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+}
+
+.key-insights .insight .icon.risk {
+  background-color: var(--risk-color);
+}

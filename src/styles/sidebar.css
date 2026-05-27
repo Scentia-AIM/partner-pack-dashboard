@@ -1,0 +1,83 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 280px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--primary-color);
+  border-top-right-radius: 20px;
+  box-shadow: 10px 0px 20px -10px #06052277;
+  padding: 4rem 2rem 2rem;
+  z-index: 1;
+}
+
+.sidebar img {
+  width: 100%;
+  height: auto;
+  max-width: 165px;
+  margin-bottom: 1rem;
+}
+
+.sidebar .client {
+  font-size: 1rem;
+  color: #ffffff;
+  margin: 0;
+}
+
+.sidebar .package {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.sidebar .seats {
+  font-size: 1rem;
+  color: var(--accent-color);
+}
+
+.sidebar .seats span {
+  font-weight: 600;
+}
+
+.sidebar .contract-select {
+  width: 100%;
+  font-size: 0.875rem;
+  padding: 0.8rem 0.5rem;
+  border-radius: 8px;
+}
+
+.sidebar .menu {
+  list-style: none;
+  margin: 2rem 0;
+  padding: 0;
+}
+
+.sidebar .menu li {
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.sidebar .details p {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.sidebar .details p:first-child {
+  color: #d988d5;
+}
+
+.sidebar .details p span {
+  font-weight: 600;
+}
+
+.sidebar .copyright {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #ffffff;
+}
