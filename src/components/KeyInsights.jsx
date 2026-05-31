@@ -1,4 +1,8 @@
-export default function KeyInsights() {
+export default function KeyInsights({
+  seatsUsedPercentage,
+  learnersOnTrackPercentage,
+  inactiveLearners,
+}) {
   return (
     <>
       <h2 className="m-t-64 m-b-16">Key Insights</h2>
@@ -24,7 +28,7 @@ export default function KeyInsights() {
             </svg>
           </div>
           <h3 className="m-16">
-            <span>82%</span> of seat allocations used
+            <span>{seatsUsedPercentage}%</span> of seat allocations used
           </h3>
           <a>View more &gt;</a>
         </div>
@@ -49,7 +53,8 @@ export default function KeyInsights() {
             </svg>
           </div>
           <h3 className="m-16">
-            <span>82%</span> of seat allocations used
+            <span>{learnersOnTrackPercentage}% learners</span> on track to
+            complete
           </h3>
           <a>View more &gt;</a>
         </div>
@@ -74,7 +79,7 @@ export default function KeyInsights() {
             </svg>
           </div>
           <h3 className="m-16">
-            <span>82%</span> of seat allocations used
+            <span>{inactiveLearners} learners</span> require intervention
           </h3>
           <a>View more &gt;</a>
         </div>
