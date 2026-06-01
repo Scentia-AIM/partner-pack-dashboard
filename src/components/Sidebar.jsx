@@ -1,12 +1,13 @@
 import "../styles/sidebar.css";
 import { Link, NavLink } from "react-router-dom";
+import aimLogo from "./assets/aim-logo.png";
 
 export default function Sidebar({ seatAllocation }) {
   return (
     <div className="sidebar">
       <div className="container">
         <Link to="/">
-          <img src="/assets/aim-logo.png" alt="AIM Logo" />
+          <img alt="AIM Logo" src={aimLogo} />
         </Link>
         <div className="m-16">
           <p className="client">Rest Super</p>
