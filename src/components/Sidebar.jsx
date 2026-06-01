@@ -1,6 +1,6 @@
 import "../styles/sidebar.css";
 import { Link, NavLink } from "react-router-dom";
-import aimLogo from "./assets/aim-logo.png";
+import aimLogo from "../assets/aim-logo.png";
 
 export default function Sidebar({ seatAllocation }) {
   return (

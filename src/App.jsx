@@ -2,7 +2,7 @@ import Sidebar from "./components/Sidebar";
 import Home from "./components/Home";
 import StudentOverview from "./components/StudentOverview";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import aimSwoosh from "./assets/aim-swoosh.svg";
+import aimSwoosh from "../assets/aim-swoosh.svg";
 
 export default function App() {
   const seatAllocation = 10;
