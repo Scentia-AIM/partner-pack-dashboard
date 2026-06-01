@@ -15,6 +15,14 @@
   z-index: 1;
 }
 
+.sidebar a {
+  opacity: 1;
+}
+
+.sidebar a:hover {
+  opacity: 0.8;
+}
+
 .sidebar img {
   width: 100%;
   height: auto;
@@ -60,6 +68,12 @@
 .sidebar .menu li {
   color: #ffffff;
   margin-bottom: 1.5rem;
+}
+
+.sidebar .menu li a {
+  color: #ffffff;
+  font-size: 1rem;
+  opacity: 1;
 }
 
 .sidebar .details p {

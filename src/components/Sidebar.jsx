@@ -1,17 +1,20 @@
 import "../styles/sidebar.css";
+import { Link } from "react-router-dom";
 
-export default function Sidebar() {
+export default function Sidebar({ seatAllocation }) {
   return (
     <div className="sidebar">
       <div className="container">
-        <img src="src/assets/aim-logo.png" alt="AIM Logo" />
+        <Link to="/">
+          <img src="src/assets/aim-logo.png" alt="AIM Logo" />
+        </Link>
         <div className="m-16">
           <p className="client">Rest Super</p>
           <p className="package">Premium Partner Pack</p>
         </div>
 
         <p className="seats">
-          Student Seats: <span>300</span>
+          Student Seats: <span>{seatAllocation}</span>
         </p>
 
         <select className="contract-select">
@@ -20,7 +23,12 @@ export default function Sidebar() {
         </select>
 
         <ul className="menu">
-          <li>Student Overview</li>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/students">Students</Link>
+          </li>
           <li>Enrolled Courses</li>
           <li>Locations</li>
           <li>Get In Touch</li>

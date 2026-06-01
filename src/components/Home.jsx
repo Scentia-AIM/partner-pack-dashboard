@@ -4,10 +4,7 @@ import RecentActivity from "./RecentActivity";
 import Welcome from "./Welcome";
 import { students } from "../data/mockStudents";
 
-export default function Home() {
-  //Seat Allocation
-  const seatAllocation = 10;
-
+export default function Home({ seatAllocation }) {
   const totalLearners = students.length;
 
   const seatsUsedPercentage = Math.round(
