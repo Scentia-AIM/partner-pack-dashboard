@@ -6,7 +6,7 @@ export default function Sidebar({ seatAllocation }) {
     <div className="sidebar">
       <div className="container">
         <Link to="/">
-          <img src="src/assets/aim-logo.png" alt="AIM Logo" />
+          <img src="public/assets/aim-logo.png" alt="AIM Logo" />
         </Link>
         <div className="m-16">
           <p className="client">Rest Super</p>

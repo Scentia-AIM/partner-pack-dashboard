@@ -10,7 +10,7 @@ export default function App() {
       <div className="main">
         <img
           className="swoosh"
-          src="src/assets/aim-swoosh.svg"
+          src="public/assets/aim-swoosh.svg"
           alt="AIM Swoosh"
         />
         <Sidebar seatAllocation={seatAllocation} />
