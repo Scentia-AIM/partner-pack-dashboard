@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function KeyInsights({
   seatsUsedPercentage,
   learnersOnTrackPercentage,
@@ -30,7 +32,9 @@ export default function KeyInsights({
           <h3 className="m-16">
             <span>{seatsUsedPercentage}%</span> of seat allocations used
           </h3>
-          <a>View more &gt;</a>
+          <Link to="/students" className="link">
+            View more &gt;
+          </Link>
         </div>
         <div className="insight">
           <div className="icon">
@@ -56,7 +60,9 @@ export default function KeyInsights({
             <span>{learnersOnTrackPercentage}% learners</span> on track to
             complete
           </h3>
-          <a>View more &gt;</a>
+          <Link to="/students" className="link">
+            View more &gt;
+          </Link>
         </div>
         <div className="insight">
           <div className="icon risk">
@@ -81,7 +87,9 @@ export default function KeyInsights({
           <h3 className="m-16">
             <span>{inactiveLearners} learners</span> require intervention
           </h3>
-          <a>View more &gt;</a>
+          <Link to="/students" className="link">
+            View more &gt;
+          </Link>
         </div>
       </div>
     </>

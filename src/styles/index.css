@@ -115,7 +115,7 @@ div {
   color: var(--primary-color);
 }
 
-a {
+a.link {
   display: inline-block;
   font-size: 0.875rem;
   color: var(--primary-color);

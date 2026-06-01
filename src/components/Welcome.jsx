@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export default function Welcome() {
   return (
     <div className="welcome">
@@ -7,7 +8,9 @@ export default function Welcome() {
         health and upcoming milestones across qualifications, workshops and
         coaching programs.
       </p>
-      <button className="btn m-t-16">View students</button>
+      <Link to="/students">
+        <button className="btn m-t-16">View students</button>
+      </Link>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 export default function App() {
   const seatAllocation = 10;
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/partner-pack-dashboard">
       <div className="main">
         <img
           className="swoosh"

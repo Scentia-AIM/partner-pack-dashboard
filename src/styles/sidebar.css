@@ -16,7 +16,7 @@
 }
 
 .sidebar a {
-  opacity: 1;
+  transition: opacity 0.1s ease-in-out;
 }
 
 .sidebar a:hover {
@@ -53,10 +53,19 @@
 }
 
 .sidebar .contract-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  font-family: "IBM Plex Sans", sans-serif;
   width: 100%;
   font-size: 0.875rem;
   padding: 0.8rem 0.5rem;
   border-radius: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.707031 0.707092L6.70703 6.70709L12.707 0.707093' stroke='%2315134F' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 14px 9px;
 }
 
 .sidebar .menu {
@@ -74,6 +83,37 @@
   color: #ffffff;
   font-size: 1rem;
   opacity: 1;
+  text-decoration: none;
+  margin-left: -1rem;
+  transition:
+    color 0.1s ease-in-out,
+    margin-left 0.1s ease-in-out;
+}
+
+.sidebar .menu li a.active {
+  color: var(--accent-color);
+}
+
+.sidebar .menu li a:hover {
+  color: var(--accent-color);
+  margin-left: 0;
+}
+
+.sidebar .menu li a::before {
+  display: inline-block;
+  visibility: hidden;
+  content: "";
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  box-shadow: 0px 0px 5px var(--accent-color);
+  margin-bottom: 3px;
+}
+
+.sidebar .menu li a:hover::before {
+  visibility: visible;
 }
 
 .sidebar .details p {

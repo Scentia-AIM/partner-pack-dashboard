@@ -1,5 +1,5 @@
 import "../styles/sidebar.css";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export default function Sidebar({ seatAllocation }) {
   return (
@@ -27,7 +27,14 @@ export default function Sidebar({ seatAllocation }) {
             <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/students">Students</Link>
+            <NavLink
+              to="/students"
+              className={({ isActive }) =>
+                isActive ? "menu-item active" : "menu-item"
+              }
+            >
+              Students
+            </NavLink>
           </li>
           <li>Enrolled Courses</li>
           <li>Locations</li>
@@ -45,8 +52,8 @@ export default function Sidebar({ seatAllocation }) {
           </p>
         </div>
         <p className="copyright">
-          &copy; Copyright 2026 Australian Institute of Business. All Rights
-          Reserved.
+          &copy; Copyright {new Date().getFullYear()} Australian Institute of
+          Business. All Rights Reserved.
         </p>
       </div>
     </div>

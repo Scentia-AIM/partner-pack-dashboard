@@ -43,11 +43,29 @@ export default function Home({ seatAllocation }) {
     (activeLearners / totalLearners) * 100,
   );
 
+  const expiringThisMonth = students.filter((student) => {
+    const today = new Date();
+    const endDate = new Date(student.endDate);
+
+    return (
+      endDate.getMonth() === today.getMonth() &&
+      endDate.getFullYear() === today.getFullYear()
+    );
+  }).length;
+
+  const latestUnitCompleted = "Luke completed Unit 6";
+  const latestWorkshopAttendance = "Sarah attended Mini MBA workshop";
+
   return (
     <div className="home">
       <div className="header">
         <Welcome />
-        <RecentActivity />
+        <RecentActivity
+          expiringThisMonth={expiringThisMonth}
+          inactiveLearners={inactiveLearners}
+          latestUnitCompleted={latestUnitCompleted}
+          latestWorkshopAttendance={latestWorkshopAttendance}
+        />
       </div>
       <KeyInsights
         seatsUsedPercentage={seatsUsedPercentage}

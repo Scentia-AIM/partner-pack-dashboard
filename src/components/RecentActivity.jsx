@@ -1,13 +1,20 @@
-export default function RecentActivity() {
+import { Link } from "react-router-dom";
+
+export default function RecentActivity({
+  expiringThisMonth,
+  inactiveLearners,
+  latestUnitCompleted,
+  latestWorkshopAttendance,
+}) {
   return (
     <div className="activity">
       <h2>Recent Activity</h2>
       <ul>
         <li className="risk">
-          <span>4 enrolments</span> expire this month
+          <span>{expiringThisMonth}</span> enrolments expire this month
         </li>
         <li className="risk">
-          <span>3 learners</span> inactive for 30+ days
+          <span>{inactiveLearners}</span> learners inactive for 30+ days
         </li>
         <li>
           <span>Luke</span> completed Unit 6
@@ -16,7 +23,9 @@ export default function RecentActivity() {
           <span>Sarah</span> attended Mini MBA workshop
         </li>
       </ul>
-      <a href="/students/">View more &gt;</a>
+      <Link to="/students" className="link">
+        View more &gt;
+      </Link>
     </div>
   );
 }
