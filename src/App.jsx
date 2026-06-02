@@ -1,6 +1,7 @@
 import Sidebar from "./components/Sidebar";
-import Home from "./components/Home";
-import StudentOverview from "./components/StudentOverview";
+import Home from "./pages/Home";
+import StudentOverview from "./pages/StudentOverview";
+import EnrolledCourses from "./pages/EnrolledCourses";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import aimSwoosh from "./assets/aim-swoosh.svg";
 
@@ -15,6 +16,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home seatAllocation={seatAllocation} />} />
           <Route path="/students" element={<StudentOverview />} />
+          <Route path="/enrolled-courses" element={<EnrolledCourses />} />
         </Routes>
       </div>
     </BrowserRouter>

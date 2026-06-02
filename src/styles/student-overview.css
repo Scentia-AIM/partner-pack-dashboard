@@ -53,6 +53,11 @@
   grid-template-columns: 80px 80px 1fr 1fr 120px 120px;
 }
 
+.student-overview .student:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
 .student-overview .student p {
   font-size: 0.75rem;
   font-weight: 400;

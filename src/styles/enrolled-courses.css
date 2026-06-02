@@ -1,0 +1,40 @@
+.enrolled-courses {
+}
+
+.enrolled-courses .course {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 2rem;
+  align-items: center;
+  padding-block: 1rem;
+  border-bottom: 1px solid #f2f4f7;
+}
+
+.enrolled-courses .course:first-child {
+  padding-top: 0;
+}
+
+.enrolled-courses .course:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.enrolled-courses .course .title h3 {
+  font-size: 1rem;
+}
+
+.enrolled-courses .course .title p {
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: var(--primary-color);
+  opacity: 0.5;
+  margin: 0;
+}
+
+.enrolled-courses .course .user-count {
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--primary-color);
+  opacity: 0.5;
+  margin: 0;
+}

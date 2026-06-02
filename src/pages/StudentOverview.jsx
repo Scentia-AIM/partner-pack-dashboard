@@ -1,6 +1,6 @@
 import "../styles/student-overview.css";
-import FilterBar from "./FilterBar";
-import StudentTable from "./StudentTable";
+import FilterBar from "../components/FilterBar";
+import StudentTable from "../components/StudentTable";
 import { useState } from "react";
 import { students } from "../data/mockStudents";
 

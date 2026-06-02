@@ -1,7 +1,7 @@
 import "../styles/home.css";
-import KeyInsights from "./KeyInsights";
-import RecentActivity from "./RecentActivity";
-import Welcome from "./Welcome";
+import KeyInsights from "../components/KeyInsights";
+import RecentActivity from "../components/RecentActivity";
+import Welcome from "../components/Welcome";
 import { students } from "../data/mockStudents";
 
 export default function Home({ seatAllocation }) {
