@@ -1,0 +1,35 @@
+.student-locations {
+}
+
+.student-locations .location {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.student-locations .location img {
+  width: 86px;
+  height: 86px;
+  object-fit: cover;
+  border-radius: 25px;
+}
+
+.student-locations .location div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.student-locations .location div h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.student-locations .location div p {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 300;
+  opacity: 0.5;
+}
