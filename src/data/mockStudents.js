@@ -18,7 +18,7 @@ export const students = [
   {
     id: 2,
     learnerName: "Sarah Jones",
-    location: "Sydney",
+    location: "Melbourne",
     courseName: "Mini MBA",
     courseType: "mini_mba",
 
@@ -34,7 +34,7 @@ export const students = [
   {
     id: 3,
     learnerName: "James Wilson",
-    location: "Brisbane",
+    location: "Melbourne",
     courseName: "Project Management Fundamentals",
     courseType: "short_course",
 

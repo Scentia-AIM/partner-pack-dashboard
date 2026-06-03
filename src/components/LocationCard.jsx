@@ -1,4 +1,4 @@
-export default function LocationCard() {
+export default function LocationCard({ location, count }) {
   return (
     <div className="card location">
       <img
@@ -6,8 +6,8 @@ export default function LocationCard() {
         alt="City"
       />
       <div>
-        <h3>Sydney</h3>
-        <p>42 Users</p>
+        <h3>{location}</h3>
+        <p>{count} Users</p>
       </div>
     </div>
   );
