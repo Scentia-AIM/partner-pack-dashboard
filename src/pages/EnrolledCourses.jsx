@@ -25,9 +25,9 @@ export default function EnrolledCourses() {
         <div className="title m-t-32">
           <h1>Enrolled Courses</h1>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam.
+            View the qualifications, short courses and Mini-MBA programs
+            included in your partner pack. See enrolment numbers across each
+            course and access course-level learner details.
           </p>
         </div>
       </div>

@@ -16,9 +16,9 @@ export default function Locations() {
         <div className="title m-t-32">
           <h1>Student Locations</h1>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam.
+            Review each learner's enrolled courses, progress and key milestones.
+            This page helps you monitor individual learning journeys and see
+            where learners are up to.
           </p>
         </div>
       </div>

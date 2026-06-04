@@ -77,9 +77,9 @@ export default function StudentOverview() {
         <div className="title m-t-32">
           <h1>Student Overview</h1>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam.
+            View learner enrolments, progress and completion timelines in one
+            place. Use filters to monitor activity, review course progress and
+            identify learners who may need follow-up.
           </p>
         </div>
       </div>
