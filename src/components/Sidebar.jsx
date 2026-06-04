@@ -36,7 +36,7 @@ export default function Sidebar({ seatAllocation }) {
           </li>
           <li>
             <NavLink
-              to="/students"
+              to="/students/"
               className={({ isActive }) =>
                 isActive ? "menu-item active" : "menu-item"
               }
@@ -46,7 +46,7 @@ export default function Sidebar({ seatAllocation }) {
           </li>
           <li>
             <NavLink
-              to="/enrolled-courses"
+              to="/enrolled-courses/"
               className={({ isActive }) =>
                 isActive ? "menu-item active" : "menu-item"
               }
@@ -56,7 +56,7 @@ export default function Sidebar({ seatAllocation }) {
           </li>
           <li>
             <NavLink
-              to="/locations"
+              to="/locations/"
               className={({ isActive }) =>
                 isActive ? "menu-item active" : "menu-item"
               }
@@ -66,7 +66,7 @@ export default function Sidebar({ seatAllocation }) {
           </li>
           <li>
             <NavLink
-              to="/contact"
+              to="/contact/"
               className={({ isActive }) =>
                 isActive ? "menu-item active" : "menu-item"
               }
