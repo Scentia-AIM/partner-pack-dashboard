@@ -10,7 +10,9 @@ export default function CourseCard({ courses, count }) {
             <h3>{courseName}</h3>
           </div>
 
-          <p className="user-count">{courses[courseName]} Users</p>
+          <p className="user-count">
+            {courses[courseName]} {count} {count > 1 ? "Students" : "Student"}
+          </p>
           <Link className="link" to="/students">
             View &gt;
           </Link>

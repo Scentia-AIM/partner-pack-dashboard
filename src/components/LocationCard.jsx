@@ -7,7 +7,9 @@ export default function LocationCard({ location, count }) {
       />
       <div>
         <h3>{location}</h3>
-        <p>{count} Users</p>
+        <p>
+          {count} {count > 1 ? "Students" : "Student"}
+        </p>
       </div>
     </div>
   );
