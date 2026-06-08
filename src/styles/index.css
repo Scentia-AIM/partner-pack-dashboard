@@ -14,6 +14,10 @@ body {
   position: relative;
 }
 
+::selection {
+  background-color: #aba8fc5a;
+}
+
 h1,
 h2,
 h3,

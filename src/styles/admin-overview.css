@@ -1,0 +1,91 @@
+.admin-overview {
+}
+
+.admin-overview .filter-bar {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr 150px auto auto;
+}
+
+.admin-overview .filter-bar select,
+.admin-overview .filter-bar input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-color: #ffffff;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  box-shadow: 0 0 30px 10px #e7e4e8ae;
+  border-radius: 8px;
+  border: none;
+  color: #8a89a7;
+  font-weight: 400;
+  font-family: "IBM Plex Sans", sans-serif;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath opacity='0.5' d='M0.707031 0.707092L6.70703 6.70709L12.707 0.707093' stroke='%2315134F' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 14px 9px;
+}
+
+.admin-overview .filter-bar input {
+  background: none;
+}
+
+.admin-overview .head {
+  gap: 2rem;
+  border-bottom: 1px solid #f2f4f7;
+  grid-template-columns: 120px 120px 120px 120px 120px 1fr;
+}
+
+.admin-overview .head p {
+  font-weight: 500;
+}
+
+.admin-overview .client {
+  gap: 2rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f2f4f7;
+  align-items: center;
+  grid-template-columns: 120px 120px 120px 120px 120px 1fr;
+}
+
+.admin-overview .client p {
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.admin-overview .client span {
+  font-weight: 600;
+}
+
+.admin-overview .client .status-pill {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 25px;
+  text-align: center;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.admin-overview .client .status-pill.archived {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
+.admin-overview .client .actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.admin-overview .client .actions button {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--primary-color);
+}

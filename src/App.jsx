@@ -3,6 +3,7 @@ import Home from "./clientPages/Home";
 import StudentOverview from "./clientPages/StudentOverview";
 import EnrolledCourses from "./clientPages/EnrolledCourses";
 import StudentLocations from "./clientPages/StudentLocations";
+import AdminHome from "./adminPages/AdminHome";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import aimSwoosh from "./assets/aim-swoosh.svg";
 
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/students" element={<StudentOverview />} />
           <Route path="/enrolled-courses" element={<EnrolledCourses />} />
           <Route path="/locations" element={<StudentLocations />} />
+          <Route path="/admin" element={<AdminHome />} />
         </Routes>
       </div>
     </BrowserRouter>
