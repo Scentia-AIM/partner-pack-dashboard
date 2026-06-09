@@ -1,16 +1,25 @@
 import "../styles/sidebar.css";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 import aimLogo from "../assets/aim-logo.png";
-import { useLocation } from "react-router-dom";
 
 export default function Sidebar({ seatAllocation }) {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith("/admin");
+
+  const pathParts = location.pathname.split("/").filter(Boolean);
+
+  const clientName = pathParts[0];
+  const contractNumber = pathParts[1];
+
+  const clientBasePath =
+    !isAdminPage && clientName && contractNumber
+      ? `/${clientName}/${contractNumber}`
+      : "";
   return (
     <div className="sidebar">
       {!isAdminPage ? (
         <div className="container">
-          <Link to="/">
+          <Link to={`${clientBasePath}/`}>
             <img alt="AIM Logo" src={aimLogo} />
           </Link>
           <div className="m-16">
@@ -30,7 +39,8 @@ export default function Sidebar({ seatAllocation }) {
           <ul className="menu">
             <li>
               <NavLink
-                to="/"
+                to={clientBasePath}
+                end
                 className={({ isActive }) =>
                   isActive ? "menu-item active" : "menu-item"
                 }
@@ -38,9 +48,10 @@ export default function Sidebar({ seatAllocation }) {
                 Home
               </NavLink>
             </li>
+
             <li>
               <NavLink
-                to="/students/"
+                to={`${clientBasePath}/students`}
                 className={({ isActive }) =>
                   isActive ? "menu-item active" : "menu-item"
                 }
@@ -48,9 +59,10 @@ export default function Sidebar({ seatAllocation }) {
                 Students
               </NavLink>
             </li>
+
             <li>
               <NavLink
-                to="/enrolled-courses/"
+                to={`${clientBasePath}/enrolled-courses`}
                 className={({ isActive }) =>
                   isActive ? "menu-item active" : "menu-item"
                 }
@@ -58,9 +70,10 @@ export default function Sidebar({ seatAllocation }) {
                 Enrolled Courses
               </NavLink>
             </li>
+
             <li>
               <NavLink
-                to="/locations/"
+                to={`${clientBasePath}/locations`}
                 className={({ isActive }) =>
                   isActive ? "menu-item active" : "menu-item"
                 }
@@ -68,9 +81,10 @@ export default function Sidebar({ seatAllocation }) {
                 Locations
               </NavLink>
             </li>
+
             <li>
               <NavLink
-                to="/contact/"
+                to={`${clientBasePath}/contact`}
                 className={({ isActive }) =>
                   isActive ? "menu-item active" : "menu-item"
                 }

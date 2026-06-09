@@ -1,4 +1,9 @@
+import { Link } from "react-router-dom";
+
 export default function Client({ clients }) {
+  function createSlug(text) {
+    return text.toLowerCase().replaceAll(" ", "-");
+  }
   return clients.map((client) => (
     <div className="client col-6" key={client.id}>
       <p>{client.clientName}</p>
@@ -11,8 +16,12 @@ export default function Client({ clients }) {
       <p>{client.status}</p>
 
       <div className="actions">
-        <button>Dashboard</button>
-        <button>Edit</button>
+        <Link>Edit</Link>
+        <Link
+          to={`/${createSlug(client.clientName)}/${client.contractNumber}/`}
+        >
+          Dashboard
+        </Link>
       </div>
     </div>
   ));

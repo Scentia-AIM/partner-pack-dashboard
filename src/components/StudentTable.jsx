@@ -1,8 +1,26 @@
 import Student from "./Student";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+function createSlug(text) {
+  return text.toLowerCase().replaceAll(" ", "-");
+}
 
 export default function StudentTable({ students }) {
+  const location = useLocation();
+  const pathParts = location.pathname.split("/").filter(Boolean);
+  const clientName = pathParts[0];
+  const contractNumber = pathParts[1];
+
+  const contractStudents = students.filter((student) => {
+    const studentClientSlug = createSlug(student.clientName);
+
+    const matchesClient = studentClientSlug === clientName;
+    const matchesContract = student.contractNumber === contractNumber;
+
+    return matchesClient && matchesContract;
+  });
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const studentsPerPage = 5;
@@ -63,7 +81,7 @@ export default function StudentTable({ students }) {
         <p className="m-t-32">No students match these filters.</p>
       ) : (
         <>
-          <Student students={visibleStudents} />
+          <Student students={contractStudents} />
           {totalPages > 1 && (
             <div className="pagination m-t-32">
               <button onClick={goToPreviousPage} disabled={currentPage === 1}>

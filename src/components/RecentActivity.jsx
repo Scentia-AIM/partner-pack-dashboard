@@ -23,7 +23,7 @@ export default function RecentActivity({
           <span>Sarah</span> attended Mini MBA workshop
         </li>
       </ul>
-      <Link to="/students/" className="link">
+      <Link to="students" className="link">
         View more &gt;
       </Link>
     </div>

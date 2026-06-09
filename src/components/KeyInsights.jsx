@@ -32,7 +32,7 @@ export default function KeyInsights({
           <h3 className="m-16">
             <span>{seatsUsedPercentage}%</span> of seat allocations used
           </h3>
-          <Link to="/students/" className="link">
+          <Link to="students" className="link">
             View more &gt;
           </Link>
         </div>
@@ -60,7 +60,7 @@ export default function KeyInsights({
             <span>{learnersOnTrackPercentage}% learners</span> on track to
             complete
           </h3>
-          <Link to="/students/" className="link">
+          <Link to="students" className="link">
             View more &gt;
           </Link>
         </div>
@@ -87,7 +87,7 @@ export default function KeyInsights({
           <h3 className="m-16">
             <span>{inactiveLearners} learners</span> require intervention
           </h3>
-          <Link to="/students/" className="link">
+          <Link to="students" className="link">
             View more &gt;
           </Link>
         </div>

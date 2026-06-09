@@ -119,6 +119,24 @@ div {
   color: var(--primary-color);
 }
 
+.btn.upload {
+  background-color: #ffeafe;
+  color: #732d81;
+  border-color: #ffeafe;
+}
+
+.btn.upload:hover {
+  background-color: #ffffff;
+  border-color: #732d81;
+}
+
+.btn:disabled,
+.btn.upload:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 a.link {
   display: inline-block;
   font-size: 0.875rem;

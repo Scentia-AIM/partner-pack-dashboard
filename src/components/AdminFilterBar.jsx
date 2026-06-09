@@ -4,6 +4,7 @@ export default function AdminFilterBar({
   status,
   setStatus,
   resetFilters,
+  openImportCSVModal,
 }) {
   return (
     <div className="filter-bar m-t-64">
@@ -24,8 +25,8 @@ export default function AdminFilterBar({
         Reset
       </button>
 
-      <button className="btn primary" type="button">
-        Add contract +
+      <button className="btn upload" type="button" onClick={openImportCSVModal}>
+        Upload master CSV
       </button>
     </div>
   );

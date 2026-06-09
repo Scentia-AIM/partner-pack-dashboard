@@ -16,11 +16,27 @@ export default function App() {
         <Sidebar seatAllocation={seatAllocation} />
         <div></div>
         <Routes>
-          <Route path="/" element={<Home seatAllocation={seatAllocation} />} />
-          <Route path="/students" element={<StudentOverview />} />
-          <Route path="/enrolled-courses" element={<EnrolledCourses />} />
-          <Route path="/locations" element={<StudentLocations />} />
           <Route path="/admin" element={<AdminHome />} />
+
+          <Route
+            path="/:clientName/:contractNumber"
+            element={<Home seatAllocation={seatAllocation} />}
+          />
+
+          <Route
+            path="/:clientName/:contractNumber/students"
+            element={<StudentOverview />}
+          />
+
+          <Route
+            path="/:clientName/:contractNumber/enrolled-courses"
+            element={<EnrolledCourses />}
+          />
+
+          <Route
+            path="/:clientName/:contractNumber/locations"
+            element={<StudentLocations />}
+          />
         </Routes>
       </div>
     </BrowserRouter>

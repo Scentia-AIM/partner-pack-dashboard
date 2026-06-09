@@ -3,12 +3,15 @@ import "../styles/admin-overview.css";
 import { mockClients } from "../data/mockClients";
 import { useState } from "react";
 import AdminFilterBar from "../components/AdminFilterBar";
+import ImportCSVModal from "../components/ImportCSVModal";
 
 export default function AdminHome() {
+  const [clients, setClients] = useState(mockClients);
   const [searchTerm, setSearchTerm] = useState("");
   const [status, setStatus] = useState("all");
+  const [isImportCSVModalOpen, setIsImportCSVModalOpen] = useState(false);
 
-  const filteredClients = mockClients.filter((client) => {
+  const filteredClients = clients.filter((client) => {
     const matchesSearch = client.clientName
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -23,6 +26,20 @@ export default function AdminHome() {
     setSearchTerm("");
     setStatus("all");
   }
+
+  function openImportCSVModal() {
+    setIsImportCSVModalOpen(true);
+  }
+
+  function closeImportCSVModal() {
+    setIsImportCSVModalOpen(false);
+  }
+
+  function handleCSVImport(importedClients) {
+    setClients(importedClients);
+    closeImportCSVModal();
+  }
+
   return (
     <div className="admin-overview">
       <div className="header">
@@ -41,9 +58,17 @@ export default function AdminHome() {
         status={status}
         setStatus={setStatus}
         resetFilters={resetFilters}
+        openImportCSVModal={openImportCSVModal}
       />
 
       <ClientTable clients={filteredClients} />
+
+      {isImportCSVModalOpen && (
+        <ImportCSVModal
+          closeModal={closeImportCSVModal}
+          onImport={handleCSVImport}
+        />
+      )}
     </div>
   );
 }

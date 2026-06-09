@@ -1,6 +1,9 @@
 export const students = [
   {
     id: 1,
+    clientName: "Rest Super",
+    contractNumber: "4387",
+
     learnerName: "Tom Jones",
     location: "Melbourne",
     courseName: "Diploma of Leadership and Management",
@@ -17,6 +20,9 @@ export const students = [
 
   {
     id: 2,
+    clientName: "Rest Super",
+    contractNumber: "4387",
+
     learnerName: "Sarah Jones",
     location: "Melbourne",
     courseName: "Mini MBA",
@@ -33,6 +39,9 @@ export const students = [
 
   {
     id: 3,
+    clientName: "Rest Super",
+    contractNumber: "4387",
+
     learnerName: "James Wilson",
     location: "Melbourne",
     courseName: "Project Management Fundamentals",
@@ -49,6 +58,9 @@ export const students = [
 
   {
     id: 4,
+    clientName: "Rest Super",
+    contractNumber: "5120",
+
     learnerName: "Emily Carter",
     location: "Perth",
     courseName: "Certificate IV in Leadership",
@@ -65,6 +77,9 @@ export const students = [
 
   {
     id: 5,
+    clientName: "Delta",
+    contractNumber: "9021",
+
     learnerName: "Michael Chen",
     location: "Adelaide",
     courseName: "IECL Coaching Program",
@@ -81,6 +96,9 @@ export const students = [
 
   {
     id: 6,
+    clientName: "AGL",
+    contractNumber: "7742",
+
     learnerName: "Olivia Smith",
     location: "Canberra",
     courseName: "Communication Essentials Workshop",
