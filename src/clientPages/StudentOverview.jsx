@@ -2,10 +2,31 @@ import "../styles/student-overview.css";
 import FilterBar from "../components/FilterBar";
 import StudentTable from "../components/StudentTable";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { students } from "../data/mockStudents";
 
+function createSlug(text) {
+  return text.toLowerCase().replaceAll(" ", "-");
+}
+
 export default function StudentOverview() {
-  // States for filtering students by course, location, and status
+  const pageLocation = useLocation();
+
+  const pathParts = pageLocation.pathname.split("/").filter(Boolean);
+  const clientName = pathParts[0];
+  const contractNumber = pathParts[1];
+
+  const contractStudents = students.filter((student) => {
+    if (!clientName || !contractNumber) return true;
+
+    const studentClientSlug = createSlug(student.clientName);
+
+    const matchesClient = studentClientSlug === clientName;
+    const matchesContract = student.contractNumber === contractNumber;
+
+    return matchesClient && matchesContract;
+  });
+
   const [courseName, setCourseName] = useState("all");
   const [location, setLocation] = useState("all");
   const [status, setStatus] = useState("all");
@@ -26,7 +47,7 @@ export default function StudentOverview() {
     return daysSinceProgress <= 30 ? "active" : "inactive";
   };
 
-  const availableForCourse = students.filter((student) => {
+  const availableForCourse = contractStudents.filter((student) => {
     const studentStatus = getStatus(student);
 
     return (
@@ -39,7 +60,7 @@ export default function StudentOverview() {
     ...new Set(availableForCourse.map((student) => student.courseName)),
   ];
 
-  const availableForLocation = students.filter((student) => {
+  const availableForLocation = contractStudents.filter((student) => {
     const studentStatus = getStatus(student);
 
     return (
@@ -52,7 +73,7 @@ export default function StudentOverview() {
     ...new Set(availableForLocation.map((student) => student.location)),
   ];
 
-  const filteredStudents = students.filter((student) => {
+  const filteredStudents = contractStudents.filter((student) => {
     const studentStatus = getStatus(student);
 
     const matchesCourse =
@@ -83,6 +104,7 @@ export default function StudentOverview() {
           </p>
         </div>
       </div>
+
       <FilterBar
         courseName={courseName}
         setCourseName={setCourseName}

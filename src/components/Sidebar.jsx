@@ -32,8 +32,7 @@ export default function Sidebar({ seatAllocation }) {
           </p>
 
           <select className="contract-select">
-            <option value="contract 1234">Contract 1234</option>
-            <option value="contract 5678">Contract 5678</option>
+            <option value="contract 1234">Contract {contractNumber}</option>
           </select>
 
           <ul className="menu">
@@ -109,7 +108,7 @@ export default function Sidebar({ seatAllocation }) {
           <div className="details">
             <p className="date">April - May 2026</p>
             <p>
-              Contract Number: <span>4387</span>
+              Contract Number: <span>{contractNumber}</span>
             </p>
             <p>
               Contract End Date: <span>23/03/2026</span>
