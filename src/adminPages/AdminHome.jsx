@@ -1,15 +1,64 @@
 import ClientTable from "../components/ClientTable";
 import "../styles/admin-overview.css";
 import { mockClients } from "../data/mockClients";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminFilterBar from "../components/AdminFilterBar";
 import ImportCSVModal from "../components/ImportCSVModal";
+import { supabase } from "../lib/supabaseClient";
 
 export default function AdminHome() {
-  const [clients, setClients] = useState(mockClients);
+  const [clients, setClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [status, setStatus] = useState("all");
   const [isImportCSVModalOpen, setIsImportCSVModalOpen] = useState(false);
+
+  useEffect(() => {
+    getContracts();
+  }, []);
+
+  // Get contracts database with associated client
+  async function getContracts() {
+    const { data, error } = await supabase
+      .from("contracts")
+      .select(
+        `
+      id,
+      contract_number,
+      seat_allocation,
+      status,
+      start_date,
+      end_date,
+      last_upload_at,
+      clients (
+        name
+      )
+    `,
+      )
+      .order("contract_number", { ascending: true });
+
+    console.log("Supabase contracts:", data);
+    console.log("Supabase error:", error);
+
+    if (error) {
+      setErrorMessage("Could not load contracts.");
+      setIsLoading(false);
+      return;
+    }
+
+    const formattedClients = data.map((row) => ({
+      id: row.id,
+      clientName: row.clients?.name,
+      contractNumber: row.contract_number,
+      seatsUsed: 0,
+      seatAllocation: row.seat_allocation,
+      lastUpload: row.last_upload_at,
+      status: row.status,
+      startDate: row.start_date,
+      endDate: row.end_date,
+    }));
+
+    setClients(formattedClients);
+  }
 
   const filteredClients = clients.filter((client) => {
     const matchesSearch = client.clientName
