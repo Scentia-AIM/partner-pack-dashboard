@@ -135,8 +135,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: auto;
 }
 
 .key-insights .insight .icon.risk {

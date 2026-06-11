@@ -223,3 +223,8 @@ a:hover {
   background-position: center;
   background-size: contain;
 }
+
+input:focus,
+select:focus {
+  outline: 2px solid var(--secondary-color);
+}

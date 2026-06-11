@@ -1,4 +1,6 @@
-.login {
+.login,
+.not-found,
+.loading {
   position: relative;
   background-image: url("../assets/placeholder.jpg");
   background-size: cover;
@@ -11,7 +13,9 @@
   font-family: "IBM Plex Sans", sans-serif;
 }
 
-.login img {
+.login img,
+.not-found img,
+.loading img {
   position: relative;
   width: 230px;
   margin-top: 5rem;
@@ -48,14 +52,27 @@
   z-index: 0;
 }
 
-.login .card {
+.login .card,
+.not-found .card {
   position: relative;
   padding: 4rem 4rem 3rem;
-  min-width: 720px;
+  width: 100%;
+  max-width: 720px;
 }
 
-.login .card p {
+.not-found .card {
+  padding: 4rem;
+}
+
+.login .card p,
+.not-found .card p {
   margin: 0;
+}
+
+.login form p.error {
+  width: 100%;
+  font-size: 0.875rem;
+  color: var(--risk-color);
 }
 
 .login form {
@@ -91,11 +108,33 @@
   font-family: "IBM Plex Sans", sans-serif;
 }
 
-.login p.copyright {
+.login form input:focus {
+  outline: 2px solid var(--secondary-color);
+}
+
+.login p.copyright,
+.not-found p.copyright {
   position: absolute;
   bottom: 0;
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 300;
   margin-bottom: 2rem;
+}
+
+.not-found,
+.loading {
+  background: var(--primary-color);
+}
+
+.not-found p.notice {
+  margin-top: 1rem;
+  font-weight: 300;
+  line-height: 1.5;
+  position: relative;
+}
+
+.loading p {
+  color: #ffffff;
+  text-align: center;
 }

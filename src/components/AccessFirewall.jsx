@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import ClientLogin from "../clientPages/ClientLogin";
-import "../styles/login.css";
+import DashboardNotFound from "./DashboardNotFound";
+import aimLogo from "../assets/aim-logo.png";
 
 function createSlug(text) {
   return text.toLowerCase().replaceAll(" ", "-");
@@ -54,8 +55,6 @@ export default function AccessFirewall({ children }) {
         return createSlug(contract.clients.name) === clientName;
       });
 
-      console.log("Matching contract:", matchingContract);
-
       setCurrentContract(matchingContract || null);
       setIsLoadingContract(false);
     }
@@ -67,31 +66,24 @@ export default function AccessFirewall({ children }) {
 
   if (isLoadingContract) {
     return (
-      <div className="home">
-        <p className="m-t-32">Loading dashboard...</p>
+      <div className="loading">
+        <img alt="AIM Logo" src={aimLogo} />
+        <p>Loading dashboard...</p>
       </div>
     );
   }
 
   if (contractError) {
     return (
-      <div className="home">
-        <p className="m-t-32">{contractError}</p>
+      <div className="loading">
+        <img alt="AIM Logo" src={aimLogo} />
+        <p>{contractError}</p>
       </div>
     );
   }
 
   if (!currentContract) {
-    return (
-      <div className="home">
-        <div className="header">
-          <div className="title m-t-32">
-            <h1>Dashboard not found</h1>
-            <p>This Premium Partner Pack dashboard could not be found.</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <DashboardNotFound />;
   }
 
   if (!isClientLoggedIn) {
