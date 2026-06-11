@@ -4,6 +4,8 @@ import RecentActivity from "../components/RecentActivity";
 import Welcome from "../components/Welcome";
 import { students } from "../data/mockStudents";
 import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabaseClient";
 
 function createSlug(text) {
   return text.toLowerCase().replaceAll(" ", "-");

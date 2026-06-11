@@ -3,9 +3,16 @@ export default function Welcome() {
   const pathParts = location.pathname.split("/").filter(Boolean);
 
   const clientName = pathParts[1];
+
+  const label = clientName
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+  console.log(label);
   return (
     <div className="welcome">
-      <h1>Hello {clientName}...</h1>
+      <h1>Hello {label}...</h1>
       <p>
         This dashboard provides visibility into learner performance, progression
         health and upcoming milestones across qualifications, workshops and
