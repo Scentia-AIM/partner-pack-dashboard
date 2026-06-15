@@ -9,17 +9,16 @@ export default function Home({
   isLoadingStudents,
   studentError,
 }) {
-  const contractStudents = studentRecords;
   const contractSeatAllocation = currentContract.seat_allocation;
 
-  const totalLearners = contractStudents.length;
+  const totalLearners = studentRecords.length;
 
   const seatsUsedPercentage =
     contractSeatAllocation > 0
       ? Math.round((totalLearners / contractSeatAllocation) * 100)
       : 0;
 
-  const activeLearners = contractStudents.filter((student) => {
+  const activeLearners = studentRecords.filter((student) => {
     const progress = Math.round(
       (student.unitsCompleted / student.totalUnits) * 100,
     );
@@ -34,7 +33,7 @@ export default function Home({
     return daysSinceProgress <= 30;
   }).length;
 
-  const inactiveLearners = contractStudents.filter((student) => {
+  const inactiveLearners = studentRecords.filter((student) => {
     const progress = Math.round(
       (student.unitsCompleted / student.totalUnits) * 100,
     );
@@ -52,7 +51,7 @@ export default function Home({
   const learnersOnTrackPercentage =
     totalLearners > 0 ? Math.round((activeLearners / totalLearners) * 100) : 0;
 
-  const expiringThisMonth = contractStudents.filter((student) => {
+  const expiringThisMonth = studentRecords.filter((student) => {
     const today = new Date();
     const endDate = new Date(student.endDate);
 

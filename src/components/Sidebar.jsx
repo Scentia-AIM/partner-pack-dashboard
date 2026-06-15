@@ -1,5 +1,5 @@
 import "../styles/sidebar.css";
-import { Link, NavLink, useLocation, useParams } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import aimLogo from "../assets/aim-logo.png";
 
 export default function Sidebar({ currentContract }) {
@@ -24,7 +24,7 @@ export default function Sidebar({ currentContract }) {
     <div className="sidebar">
       {!isAdminPage ? (
         <div className="container">
-          <Link
+          <NavLink
             to={clientBasePath}
             end
             className={({ isActive }) =>
@@ -32,7 +32,7 @@ export default function Sidebar({ currentContract }) {
             }
           >
             <img alt="AIM Logo" src={aimLogo} />
-          </Link>
+          </NavLink>
           <div className="m-16">
             <p className="client">{currentContract?.clients?.name}</p>
             <p className="package">Premium Partner Pack</p>
