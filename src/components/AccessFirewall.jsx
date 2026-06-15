@@ -51,6 +51,7 @@ export default function AccessFirewall({ children }) {
         .select(
           `
             id,
+            client_id,
             contract_number,
             seat_allocation,
             status,
