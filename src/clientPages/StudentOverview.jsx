@@ -1,31 +1,54 @@
 import "../styles/student-overview.css";
 import FilterBar from "../components/FilterBar";
 import StudentTable from "../components/StudentTable";
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { students } from "../data/mockStudents";
-
-function createSlug(text) {
-  return text.toLowerCase().replaceAll(" ", "-");
-}
+import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabaseClient";
 
 export default function StudentOverview() {
-  const pageLocation = useLocation();
+  const REST_SUPER_CONTRACT_ID = "2ddab48f-b288-4298-bd27-54b4931739f7";
 
-  const pathParts = pageLocation.pathname.split("/").filter(Boolean);
-  const clientName = pathParts[0];
-  const contractNumber = pathParts[1];
+  const [studentRecords, setStudentRecords] = useState([]);
+  const [isLoadingStudents, setIsLoadingStudents] = useState(true);
+  const [studentError, setStudentError] = useState("");
 
-  const contractStudents = students.filter((student) => {
-    if (!clientName || !contractNumber) return true;
+  useEffect(() => {
+    async function getStudentRecords() {
+      setIsLoadingStudents(true);
+      setStudentError("");
 
-    const studentClientSlug = createSlug(student.clientName);
+      const { data, error } = await supabase
+        .from("student_records")
+        .select("*")
+        .eq("contract_id", REST_SUPER_CONTRACT_ID)
+        .order("learner_name", { ascending: true });
 
-    const matchesClient = studentClientSlug === clientName;
-    const matchesContract = student.contractNumber === contractNumber;
+      if (error) {
+        console.error("Student records error:", error);
+        setStudentError("Could not load student records.");
+        setIsLoadingStudents(false);
+        return;
+      }
 
-    return matchesClient && matchesContract;
-  });
+      const formattedStudents = data.map((student) => ({
+        id: student.id,
+        contractId: student.contract_id,
+        learnerName: student.learner_name,
+        location: student.location,
+        courseName: student.course_name,
+        courseType: student.course_type,
+        unitsCompleted: student.units_completed,
+        totalUnits: student.total_units,
+        lastProgressDate: student.last_progress_date,
+        endDate: student.end_date,
+        attended: student.attended,
+      }));
+
+      setStudentRecords(formattedStudents);
+      setIsLoadingStudents(false);
+    }
+
+    getStudentRecords();
+  }, []);
 
   const [courseName, setCourseName] = useState("all");
   const [location, setLocation] = useState("all");
@@ -47,7 +70,7 @@ export default function StudentOverview() {
     return daysSinceProgress <= 30 ? "active" : "inactive";
   };
 
-  const availableForCourse = contractStudents.filter((student) => {
+  const availableForCourse = studentRecords.filter((student) => {
     const studentStatus = getStatus(student);
 
     return (
@@ -60,7 +83,7 @@ export default function StudentOverview() {
     ...new Set(availableForCourse.map((student) => student.courseName)),
   ];
 
-  const availableForLocation = contractStudents.filter((student) => {
+  const availableForLocation = studentRecords.filter((student) => {
     const studentStatus = getStatus(student);
 
     return (
@@ -73,7 +96,7 @@ export default function StudentOverview() {
     ...new Set(availableForLocation.map((student) => student.location)),
   ];
 
-  const filteredStudents = contractStudents.filter((student) => {
+  const filteredStudents = studentRecords.filter((student) => {
     const studentStatus = getStatus(student);
 
     const matchesCourse =
@@ -117,7 +140,11 @@ export default function StudentOverview() {
         resetFilters={resetFilters}
       />
 
-      <StudentTable students={filteredStudents} />
+      <StudentTable
+        students={filteredStudents}
+        isLoadingStudents={isLoadingStudents}
+        studentError={studentError}
+      />
     </div>
   );
 }

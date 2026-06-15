@@ -4,15 +4,14 @@ export default function Welcome() {
 
   const clientName = pathParts[1];
 
-  const label = clientName
+  const clientNameReformatted = clientName
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
-  console.log(label);
   return (
     <div className="welcome">
-      <h1>Hello {label}...</h1>
+      <h1>Hello {clientNameReformatted}...</h1>
       <p>
         This dashboard provides visibility into learner performance, progression
         health and upcoming milestones across qualifications, workshops and

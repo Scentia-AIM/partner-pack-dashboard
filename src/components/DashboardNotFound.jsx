@@ -10,7 +10,7 @@ export default function DashboardNotFound() {
         <p>Dashboard unavailable</p>
         <h1>Premium Partner Pack Not Found</h1>
         <p className="notice">
-          We couldn't find a dashboard for this client and contract number.
+          We couldn't find a dashboard for this client and/or contract number.
           Please check the link and try again.
         </p>
       </div>

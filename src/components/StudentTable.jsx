@@ -1,7 +1,11 @@
 import Student from "./Student";
 import { useState, useEffect } from "react";
 
-export default function StudentTable({ students }) {
+export default function StudentTable({
+  students,
+  isLoadingStudents,
+  studentError,
+}) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const studentsPerPage = 5;
@@ -42,6 +46,22 @@ export default function StudentTable({ students }) {
 
   for (let page = startPage; page <= endPage; page++) {
     visiblePageNumbers.push(page);
+  }
+
+  if (isLoadingStudents) {
+    return (
+      <div className="card m-32">
+        <p className="m-t-32">Loading students...</p>
+      </div>
+    );
+  }
+
+  if (studentError) {
+    return (
+      <div className="card m-32">
+        <p className="m-t-32">{studentError}</p>
+      </div>
+    );
   }
 
   return (

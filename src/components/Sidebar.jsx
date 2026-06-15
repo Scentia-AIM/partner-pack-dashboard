@@ -15,6 +15,11 @@ export default function Sidebar({ seatAllocation }) {
     !isAdminPage && clientName && contractNumber
       ? `/${clientName}/${contractNumber}`
       : "";
+
+  const clientNameReformatted = clientName
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
   return (
     <div className="sidebar">
       {!isAdminPage ? (
@@ -23,7 +28,7 @@ export default function Sidebar({ seatAllocation }) {
             <img alt="AIM Logo" src={aimLogo} />
           </Link>
           <div className="m-16">
-            <p className="client">Rest Super</p>
+            <p className="client">{clientNameReformatted}</p>
             <p className="package">Premium Partner Pack</p>
           </div>
 
