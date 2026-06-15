@@ -2,54 +2,12 @@ import "../styles/student-overview.css";
 import FilterBar from "../components/FilterBar";
 import StudentTable from "../components/StudentTable";
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabaseClient";
 
-export default function StudentOverview() {
-  const REST_SUPER_CONTRACT_ID = "2ddab48f-b288-4298-bd27-54b4931739f7";
-
-  const [studentRecords, setStudentRecords] = useState([]);
-  const [isLoadingStudents, setIsLoadingStudents] = useState(true);
-  const [studentError, setStudentError] = useState("");
-
-  useEffect(() => {
-    async function getStudentRecords() {
-      setIsLoadingStudents(true);
-      setStudentError("");
-
-      const { data, error } = await supabase
-        .from("student_records")
-        .select("*")
-        .eq("contract_id", REST_SUPER_CONTRACT_ID)
-        .order("learner_name", { ascending: true });
-
-      if (error) {
-        console.error("Student records error:", error);
-        setStudentError("Could not load student records.");
-        setIsLoadingStudents(false);
-        return;
-      }
-
-      const formattedStudents = data.map((student) => ({
-        id: student.id,
-        contractId: student.contract_id,
-        learnerName: student.learner_name,
-        location: student.location,
-        courseName: student.course_name,
-        courseType: student.course_type,
-        unitsCompleted: student.units_completed,
-        totalUnits: student.total_units,
-        lastProgressDate: student.last_progress_date,
-        endDate: student.end_date,
-        attended: student.attended,
-      }));
-
-      setStudentRecords(formattedStudents);
-      setIsLoadingStudents(false);
-    }
-
-    getStudentRecords();
-  }, []);
-
+export default function StudentOverview({
+  studentRecords,
+  isLoadingStudents,
+  studentError,
+}) {
   const [courseName, setCourseName] = useState("all");
   const [location, setLocation] = useState("all");
   const [status, setStatus] = useState("all");

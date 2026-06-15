@@ -9,11 +9,31 @@ function createSlug(text) {
   return text.toLowerCase().replaceAll(" ", "-");
 }
 
+function formatStudentRecords(data) {
+  return data.map((student) => ({
+    id: student.id,
+    contractId: student.contract_id,
+    learnerName: student.learner_name,
+    location: student.location,
+    courseName: student.course_name,
+    courseType: student.course_type,
+    unitsCompleted: student.units_completed,
+    totalUnits: student.total_units,
+    lastProgressDate: student.last_progress_date,
+    endDate: student.end_date,
+    attended: student.attended,
+  }));
+}
+
 export default function AccessFirewall({ children }) {
   const [currentContract, setCurrentContract] = useState(null);
   const [isLoadingContract, setIsLoadingContract] = useState(true);
   const [contractError, setContractError] = useState("");
   const [isClientLoggedIn, setIsClientLoggedIn] = useState(false);
+
+  const [studentRecords, setStudentRecords] = useState([]);
+  const [isLoadingStudents, setIsLoadingStudents] = useState(false);
+  const [studentError, setStudentError] = useState("");
 
   const location = useLocation();
 
@@ -55,8 +75,34 @@ export default function AccessFirewall({ children }) {
         return createSlug(contract.clients.name) === clientName;
       });
 
-      setCurrentContract(matchingContract || null);
+      if (!matchingContract) {
+        setCurrentContract(null);
+        setStudentRecords([]);
+        setIsLoadingContract(false);
+        return;
+      }
+
+      setCurrentContract(matchingContract);
       setIsLoadingContract(false);
+
+      setIsLoadingStudents(true);
+      setStudentError("");
+
+      const { data: studentsData, error: studentsError } = await supabase
+        .from("student_records")
+        .select("*")
+        .eq("contract_id", matchingContract.id)
+        .order("learner_name", { ascending: true });
+
+      if (studentsError) {
+        console.error("Student records error:", studentsError);
+        setStudentError("Could not load student records.");
+        setIsLoadingStudents(false);
+        return;
+      }
+
+      setStudentRecords(formatStudentRecords(studentsData));
+      setIsLoadingStudents(false);
     }
 
     if (clientName && contractNumber) {
@@ -94,5 +140,10 @@ export default function AccessFirewall({ children }) {
       />
     );
   }
-  return children;
+  return children({
+    currentContract,
+    studentRecords,
+    isLoadingStudents,
+    studentError,
+  });
 }

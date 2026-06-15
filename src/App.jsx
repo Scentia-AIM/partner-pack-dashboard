@@ -8,30 +8,24 @@ import AdminHome from "./adminPages/AdminHome";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import aimSwoosh from "./assets/aim-swoosh.svg";
 
-function AppFrame({ children, seatAllocation }) {
+function AppFrame({ children, currentContract }) {
   return (
-    <>
-      <div className="main">
-        <img className="swoosh" src={aimSwoosh} alt="AIM Swoosh" />
-        <Sidebar seatAllocation={seatAllocation} />
-        <div></div>
-        {children}
-      </div>
-      <div className="footer"></div>
-    </>
+    <div className="main">
+      <img className="swoosh" src={aimSwoosh} alt="AIM Swoosh" />
+      <Sidebar currentContract={currentContract} />
+      <div></div>
+      {children}
+    </div>
   );
 }
-
-export default function App() {
-  const seatAllocation = 10;
-
+export default function App({}) {
   return (
     <BrowserRouter basename="/partner-pack-dashboard/">
       <Routes>
         <Route
           path="/admin"
           element={
-            <AppFrame seatAllocation={seatAllocation}>
+            <AppFrame>
               <AdminHome />
             </AppFrame>
           }
@@ -41,9 +35,21 @@ export default function App() {
           path="/:clientName/:contractNumber"
           element={
             <AccessFirewall>
-              <AppFrame seatAllocation={seatAllocation}>
-                <Home seatAllocation={seatAllocation} />
-              </AppFrame>
+              {({
+                currentContract,
+                studentRecords,
+                isLoadingStudents,
+                studentError,
+              }) => (
+                <AppFrame currentContract={currentContract}>
+                  <Home
+                    currentContract={currentContract}
+                    studentRecords={studentRecords}
+                    isLoadingStudents={isLoadingStudents}
+                    studentError={studentError}
+                  />
+                </AppFrame>
+              )}
             </AccessFirewall>
           }
         />
@@ -52,9 +58,21 @@ export default function App() {
           path="/:clientName/:contractNumber/students"
           element={
             <AccessFirewall>
-              <AppFrame seatAllocation={seatAllocation}>
-                <StudentOverview />
-              </AppFrame>
+              {({
+                currentContract,
+                studentRecords,
+                isLoadingStudents,
+                studentError,
+              }) => (
+                <AppFrame currentContract={currentContract}>
+                  <StudentOverview
+                    currentContract={currentContract}
+                    studentRecords={studentRecords}
+                    isLoadingStudents={isLoadingStudents}
+                    studentError={studentError}
+                  />
+                </AppFrame>
+              )}
             </AccessFirewall>
           }
         />
@@ -63,9 +81,21 @@ export default function App() {
           path="/:clientName/:contractNumber/enrolled-courses"
           element={
             <AccessFirewall>
-              <AppFrame seatAllocation={seatAllocation}>
-                <EnrolledCourses />
-              </AppFrame>
+              {({
+                currentContract,
+                studentRecords,
+                isLoadingStudents,
+                studentError,
+              }) => (
+                <AppFrame currentContract={currentContract}>
+                  <EnrolledCourses
+                    currentContract={currentContract}
+                    studentRecords={studentRecords}
+                    isLoadingStudents={isLoadingStudents}
+                    studentError={studentError}
+                  />
+                </AppFrame>
+              )}
             </AccessFirewall>
           }
         />
@@ -74,9 +104,21 @@ export default function App() {
           path="/:clientName/:contractNumber/locations"
           element={
             <AccessFirewall>
-              <AppFrame seatAllocation={seatAllocation}>
-                <StudentLocations />
-              </AppFrame>
+              {({
+                currentContract,
+                studentRecords,
+                isLoadingStudents,
+                studentError,
+              }) => (
+                <AppFrame currentContract={currentContract}>
+                  <StudentLocations
+                    currentContract={currentContract}
+                    studentRecords={studentRecords}
+                    isLoadingStudents={isLoadingStudents}
+                    studentError={studentError}
+                  />
+                </AppFrame>
+              )}
             </AccessFirewall>
           }
         />

@@ -2,42 +2,50 @@ import "../styles/sidebar.css";
 import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 import aimLogo from "../assets/aim-logo.png";
 
-export default function Sidebar({ seatAllocation }) {
+export default function Sidebar({ currentContract }) {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith("/admin");
 
-  const pathParts = location.pathname.split("/").filter(Boolean);
-
-  const clientName = pathParts[0];
-  const contractNumber = pathParts[1];
+  const formattedClientName = currentContract?.clients?.name
+    .replace(" ", "-")
+    .toLowerCase();
 
   const clientBasePath =
-    !isAdminPage && clientName && contractNumber
-      ? `/${clientName}/${contractNumber}`
+    !isAdminPage && formattedClientName && currentContract?.contract_number
+      ? `/${formattedClientName}/${currentContract?.contract_number}`
       : "";
 
-  const clientNameReformatted = clientName
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+  function formatDate(dateString) {
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
+  }
+
   return (
     <div className="sidebar">
       {!isAdminPage ? (
         <div className="container">
-          <Link to={`${clientBasePath}/`}>
+          <Link
+            to={clientBasePath}
+            end
+            className={({ isActive }) =>
+              isActive ? "menu-item active" : "menu-item"
+            }
+          >
             <img alt="AIM Logo" src={aimLogo} />
           </Link>
           <div className="m-16">
-            <p className="client">{clientNameReformatted}</p>
+            <p className="client">{currentContract?.clients?.name}</p>
             <p className="package">Premium Partner Pack</p>
           </div>
 
           <p className="seats">
-            Student Seats: <span>{seatAllocation}</span>
+            Student Seats: <span>{currentContract?.seat_allocation}</span>
           </p>
 
           <select className="contract-select">
-            <option value="contract 1234">Contract {contractNumber}</option>
+            <option value="contract 1234">
+              Contract {currentContract?.contract_number}
+            </option>
           </select>
 
           <ul className="menu">
@@ -111,12 +119,16 @@ export default function Sidebar({ seatAllocation }) {
       <div className="container">
         {!isAdminPage ? (
           <div className="details">
-            <p className="date">April - May 2026</p>
-            <p>
-              Contract Number: <span>{contractNumber}</span>
+            <p className="date">
+              Last updated: <span>XXXXXXX</span>
             </p>
             <p>
-              Contract End Date: <span>23/03/2026</span>
+              Contract Number:
+              <span> {currentContract?.contract_number}</span>
+            </p>
+            <p>
+              Contract End Date:{" "}
+              <span>{formatDate(currentContract?.end_date)}</span>
             </p>
           </div>
         ) : (

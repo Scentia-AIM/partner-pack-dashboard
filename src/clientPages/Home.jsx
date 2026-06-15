@@ -2,33 +2,22 @@ import "../styles/home.css";
 import KeyInsights from "../components/KeyInsights";
 import RecentActivity from "../components/RecentActivity";
 import Welcome from "../components/Welcome";
-import { students } from "../data/mockStudents";
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabaseClient";
 
-function createSlug(text) {
-  return text.toLowerCase().replaceAll(" ", "-");
-}
-
-export default function Home({ seatAllocation }) {
-  const { clientName, contractNumber } = useParams();
-
-  const contractStudents = students.filter((student) => {
-    if (!clientName || !contractNumber) return true;
-
-    const studentClientSlug = createSlug(student.clientName);
-
-    const matchesClient = studentClientSlug === clientName;
-    const matchesContract = student.contractNumber === contractNumber;
-
-    return matchesClient && matchesContract;
-  });
+export default function Home({
+  currentContract,
+  studentRecords,
+  isLoadingStudents,
+  studentError,
+}) {
+  const contractStudents = studentRecords;
+  const contractSeatAllocation = currentContract.seat_allocation;
 
   const totalLearners = contractStudents.length;
 
   const seatsUsedPercentage =
-    totalLearners > 0 ? Math.round((totalLearners / seatAllocation) * 100) : 0;
+    contractSeatAllocation > 0
+      ? Math.round((totalLearners / contractSeatAllocation) * 100)
+      : 0;
 
   const activeLearners = contractStudents.filter((student) => {
     const progress = Math.round(
@@ -76,6 +65,10 @@ export default function Home({ seatAllocation }) {
   const latestUnitCompleted = "Luke completed Unit 6";
   const latestWorkshopAttendance = "Sarah attended Mini MBA workshop";
 
+  if (studentError) {
+    return <p className="m-t-32">{studentError}</p>;
+  }
+
   return (
     <div className="home">
       <div className="header">
@@ -85,6 +78,7 @@ export default function Home({ seatAllocation }) {
           inactiveLearners={inactiveLearners}
           latestUnitCompleted={latestUnitCompleted}
           latestWorkshopAttendance={latestWorkshopAttendance}
+          isLoading={isLoadingStudents}
         />
       </div>
 
@@ -92,6 +86,7 @@ export default function Home({ seatAllocation }) {
         seatsUsedPercentage={seatsUsedPercentage}
         learnersOnTrackPercentage={learnersOnTrackPercentage}
         inactiveLearners={inactiveLearners}
+        isLoading={isLoadingStudents}
       />
     </div>
   );
