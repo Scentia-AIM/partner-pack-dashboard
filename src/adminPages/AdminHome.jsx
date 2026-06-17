@@ -82,15 +82,16 @@ export default function AdminHome() {
     setIsImportCSVModalOpen(false);
   }
 
-  // function handleCSVImport(importedClients) {
-  //   setClients(importedClients);
-  //   closeImportCSVModal();
-  // }
-
-  function handleCSVImport({ matchedRows, unmatchedRows, rowsForSupabase }) {
+  function handleCSVImport({
+    matchedRows,
+    unmatchedRows,
+    rowsForSupabase,
+    activityItems,
+  }) {
     console.log("Matched rows ready for Supabase:", matchedRows);
     console.log("Unmatched rows:", unmatchedRows);
     console.log("Rows formatted for Supabase:", rowsForSupabase);
+    console.log("Activity items for homepage:", activityItems);
   }
 
   return (

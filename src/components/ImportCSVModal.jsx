@@ -163,26 +163,76 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
   function compareStudentRecords(existingRows, newRows) {
     const activityItems = [];
 
-    existingRows.forEach((existingRow) => {
-      const matchingNewRow = newRows.find((newRow) => {
-        return createRecordKey(newRow) === createRecordKey(existingRow);
+    newRows.forEach((newRow) => {
+      const matchingExistingRow = existingRows.find((existingRow) => {
+        return createRecordKey(existingRow) === createRecordKey(newRow);
       });
 
-      if (!matchingNewRow) return;
+      if (!matchingExistingRow) {
+        return;
+      }
 
-      if (matchingNewRow.units_completed > existingRow.units_completed) {
+      const oldUnits = matchingExistingRow.units_completed;
+      const newUnits = newRow.units_completed;
+      const totalUnits = newRow.total_units;
+
+      const wasCompleted = oldUnits < totalUnits;
+      const isNowCompleted = newUnits === totalUnits;
+
+      if (wasCompleted && isNowCompleted) {
         activityItems.push({
+          contractId: newRow.contract_id,
+          type: "course_completed",
+          message: `${newRow.learner_name} completed ${newRow.course_name}`,
+        });
+
+        return;
+      }
+
+      if (newUnits > oldUnits) {
+        activityItems.push({
+          contractId: newRow.contract_id,
           type: "unit_progress",
-          learnerName: matchingNewRow.learner_name,
-          courseName: matchingNewRow.course_name,
-          oldUnitsCompleted: existingRow.units_completed,
-          newUnitsCompleted: matchingNewRow.units_completed,
-          message: `${matchingNewRow.learner_name} progressed from ${existingRow.units_completed} to ${matchingNewRow.units_completed} units in ${matchingNewRow.course_name}`,
+          message: `${newRow.learner_name} progressed from ${oldUnits} to ${newUnits} units`,
+        });
+      }
+
+      if (matchingExistingRow.attended !== true && newRow.attended === true) {
+        activityItems.push({
+          contractId: newRow.contract_id,
+          type: "workshop_attended",
+          message: `${newRow.learner_name} attended ${newRow.course_name}`,
         });
       }
     });
 
     return activityItems;
+  }
+
+  function formatActivityItemsForSupabase(activityItems) {
+    return activityItems.map((item) => ({
+      contract_id: item.contractId,
+      type: item.type,
+      message: item.message,
+    }));
+  }
+
+  async function saveActivityItems(activityItems) {
+    if (activityItems.length === 0) return [];
+
+    const rowsForSupabase = formatActivityItemsForSupabase(activityItems);
+
+    const { data, error } = await supabase
+      .from("recent_activity")
+      .insert(rowsForSupabase)
+      .select();
+
+    if (error) {
+      console.error("Recent activity insert error:", error);
+      throw new Error("Could not save recent activity.");
+    }
+
+    return data;
   }
 
   function handleUpload() {
@@ -213,6 +263,7 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
         setUploadMessage("");
 
         const insertedRows = await uploadRowsToSupabase(rowsForSupabase);
+        const savedActivityItems = await saveActivityItems(activityItems);
 
         setUploadMessage(`${insertedRows.length} learner records uploaded.`);
         setParsedRows(matchedRows);
@@ -221,6 +272,7 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
           matchedRows,
           unmatchedRows,
           rowsForSupabase,
+          activityItems: savedActivityItems,
         });
       } catch (error) {
         setUploadError(error.message);
@@ -235,14 +287,6 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
       console.log("Matched rows:", matchedRows);
       console.log("Unmatched rows:", unmatchedRows);
       console.log("Rows formatted for Supabase:", rowsForSupabase);
-
-      // setParsedRows(matchedRows);
-
-      // onImport({
-      //   matchedRows,
-      //   unmatchedRows,
-      //   rowsForSupabase,
-      // });
     };
 
     reader.readAsText(selectedFile);
