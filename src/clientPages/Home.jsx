@@ -2,6 +2,8 @@ import "../styles/home.css";
 import KeyInsights from "../components/KeyInsights";
 import RecentActivity from "../components/RecentActivity";
 import Welcome from "../components/Welcome";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
 
 export default function Home({
   currentContract,
@@ -64,6 +66,25 @@ export default function Home({
   const latestUnitCompleted = "Luke completed Unit 6";
   const latestWorkshopAttendance = "Sarah attended Mini MBA workshop";
 
+  const [recentActivityItems, setRecentActivityItems] = useState([]);
+
+  useEffect(() => {
+    async function getRecentActivity() {
+      if (!currentContract?.id) return;
+
+      const { data, error } = await supabase
+        .from("recent_activity")
+        .select("*")
+        .eq("contract_id", currentContract.id)
+        .order("created_at", { ascending: false })
+        .limit(2);
+
+      setRecentActivityItems(data);
+    }
+
+    getRecentActivity();
+  }, [currentContract?.id]);
+
   if (studentError) {
     return <p className="m-t-32">{studentError}</p>;
   }
@@ -78,6 +99,7 @@ export default function Home({
           latestUnitCompleted={latestUnitCompleted}
           latestWorkshopAttendance={latestWorkshopAttendance}
           isLoading={isLoadingStudents}
+          activityItems={recentActivityItems}
         />
       </div>
 

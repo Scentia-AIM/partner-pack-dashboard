@@ -1,10 +1,23 @@
 import { Link } from "react-router-dom";
 
+function formatActivityMessage(message) {
+  const words = message.split(" ");
+  const studentName = words.slice(0, 2).join(" ");
+  const restOfMessage = words.slice(2).join(" ");
+
+  return (
+    <>
+      <span>{studentName}</span> {restOfMessage}
+    </>
+  );
+}
+
 export default function RecentActivity({
   expiringThisMonth,
   inactiveLearners,
   latestUnitCompleted,
   latestWorkshopAttendance,
+  activityItems,
 }) {
   return (
     <div className="activity">
@@ -16,12 +29,9 @@ export default function RecentActivity({
         <li className="risk">
           <span>{inactiveLearners}</span> learners inactive for 30+ days
         </li>
-        <li>
-          <span>Luke</span> completed Unit 6
-        </li>
-        <li>
-          <span>Sarah</span> attended Mini MBA workshop
-        </li>
+        {activityItems.map((item) => (
+          <li key={item.id}>{formatActivityMessage(item.message)}</li>
+        ))}
       </ul>
       <Link to="students" className="link">
         View more &gt;
