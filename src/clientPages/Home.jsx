@@ -63,9 +63,6 @@ export default function Home({
     );
   }).length;
 
-  const latestUnitCompleted = "Luke completed Unit 6";
-  const latestWorkshopAttendance = "Sarah attended Mini MBA workshop";
-
   const [recentActivityItems, setRecentActivityItems] = useState([]);
 
   useEffect(() => {
@@ -96,8 +93,6 @@ export default function Home({
         <RecentActivity
           expiringThisMonth={expiringThisMonth}
           inactiveLearners={inactiveLearners}
-          latestUnitCompleted={latestUnitCompleted}
-          latestWorkshopAttendance={latestWorkshopAttendance}
           isLoading={isLoadingStudents}
           activityItems={recentActivityItems}
         />

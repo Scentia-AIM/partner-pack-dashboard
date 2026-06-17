@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabaseClient";
+import {
+  getExistingStudentRecords,
+  uploadRowsToSupabase,
+  saveActivityItems,
+} from "../lib/csvUploadService";
+import {
+  parseCSV,
+  matchRowsToContracts,
+  formatStudentRowsForSupabase,
+  getUniqueContractIds,
+  compareStudentRecords,
+} from "../lib/csvUploadHelpers";
 
 export default function ImportCSVModal({ closeModal, onImport, contracts }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -36,238 +47,60 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
     setSelectedFile(file);
   }
 
-  function parseCSV(csvText) {
-    const lines = csvText.trim().split("\n");
-
-    const headers = lines[0].split(",").map((header) => header.trim());
-
-    const rows = lines.slice(1).map((line, index) => {
-      const values = line.split(",").map((value) => value.trim());
-
-      const row = headers.reduce((object, header, headerIndex) => {
-        object[header] = values[headerIndex];
-        return object;
-      }, {});
-
-      return {
-        id: index + 1,
-        clientName: row.clientName,
-        contractNumber: row.contractNumber,
-        learnerName: row.learnerName,
-        location: row.location,
-        courseName: row.courseName,
-        courseType: row.courseType,
-        unitsCompleted: Number(row.unitsCompleted),
-        totalUnits: Number(row.totalUnits),
-        lastProgressDate: row.lastProgressDate || null,
-        endDate: row.endDate || null,
-        attended: row.attended === "true",
-      };
-    });
-
-    return rows;
-  }
-
-  function matchRowsToContracts(rows) {
-    const matchedRows = [];
-    const unmatchedRows = [];
-
-    rows.forEach((row) => {
-      const matchingContract = contracts.find((contract) => {
-        return (
-          contract.clientName.toLowerCase() === row.clientName.toLowerCase() &&
-          String(contract.contractNumber) === String(row.contractNumber)
-        );
-      });
-
-      if (!matchingContract) {
-        unmatchedRows.push(row);
-        return;
-      }
-
-      matchedRows.push({
-        ...row,
-        contract_id: matchingContract.id,
-      });
-    });
-
-    return {
-      matchedRows,
-      unmatchedRows,
-    };
-  }
-
-  function formatRowsForSupabase(rows) {
-    return rows.map((row) => ({
-      contract_id: row.contract_id,
-      learner_name: row.learnerName,
-      location: row.location,
-      course_name: row.courseName,
-      course_type: row.courseType,
-      units_completed: row.unitsCompleted,
-      total_units: row.totalUnits,
-      last_progress_date: row.lastProgressDate,
-      end_date: row.endDate,
-      attended: row.attended,
-    }));
-  }
-
-  function getUniqueContractIds(rows) {
-    return [...new Set(rows.map((row) => row.contract_id))];
-  }
-
-  async function getExistingStudentRecords(contractIds) {
-    const { data, error } = await supabase
-      .from("student_records")
-      .select("*")
-      .in("contract_id", contractIds);
-
-    if (error) {
-      console.error("Existing student records error:", error);
-      return [];
-    }
-
-    return data;
-  }
-
-  async function uploadRowsToSupabase(rowsForSupabase) {
-    const contractIds = getUniqueContractIds(rowsForSupabase);
-
-    const { error: deleteError } = await supabase
-      .from("student_records")
-      .delete()
-      .in("contract_id", contractIds);
-
-    if (deleteError) {
-      console.error("Delete error:", deleteError);
-      throw new Error("Could not clear existing student records.");
-    }
-
-    const { data, error: insertError } = await supabase
-      .from("student_records")
-      .insert(rowsForSupabase)
-      .select();
-
-    if (insertError) {
-      console.error("Insert error:", insertError);
-      throw new Error("Could not upload new student records.");
-    }
-
-    return data;
-  }
-
-  function createRecordKey(row) {
-    return `${row.contract_id}-${row.learner_name}-${row.course_name}`;
-  }
-
-  function compareStudentRecords(existingRows, newRows) {
-    const activityItems = [];
-
-    newRows.forEach((newRow) => {
-      const matchingExistingRow = existingRows.find((existingRow) => {
-        return createRecordKey(existingRow) === createRecordKey(newRow);
-      });
-
-      if (!matchingExistingRow) {
-        return;
-      }
-
-      const oldUnits = matchingExistingRow.units_completed;
-      const newUnits = newRow.units_completed;
-      const totalUnits = newRow.total_units;
-
-      const wasCompleted = oldUnits < totalUnits;
-      const isNowCompleted = newUnits === totalUnits;
-
-      if (wasCompleted && isNowCompleted) {
-        activityItems.push({
-          contractId: newRow.contract_id,
-          type: "course_completed",
-          message: `${newRow.learner_name} completed ${newRow.course_name}`,
-        });
-
-        return;
-      }
-
-      if (newUnits > oldUnits) {
-        activityItems.push({
-          contractId: newRow.contract_id,
-          type: "unit_progress",
-          message: `${newRow.learner_name} progressed from ${oldUnits} to ${newUnits} units`,
-        });
-      }
-
-      if (matchingExistingRow.attended !== true && newRow.attended === true) {
-        activityItems.push({
-          contractId: newRow.contract_id,
-          type: "workshop_attended",
-          message: `${newRow.learner_name} attended ${newRow.course_name}`,
-        });
-      }
-    });
-
-    return activityItems;
-  }
-
-  function formatActivityItemsForSupabase(activityItems) {
-    return activityItems.map((item) => ({
-      contract_id: item.contractId,
-      type: item.type,
-      message: item.message,
-    }));
-  }
-
-  async function saveActivityItems(activityItems) {
-    if (activityItems.length === 0) return [];
-
-    const rowsForSupabase = formatActivityItemsForSupabase(activityItems);
-
-    const { data, error } = await supabase
-      .from("recent_activity")
-      .insert(rowsForSupabase)
-      .select();
-
-    if (error) {
-      console.error("Recent activity insert error:", error);
-      throw new Error("Could not save recent activity.");
-    }
-
-    return data;
-  }
-
   function handleUpload() {
     if (!selectedFile) return;
 
     const reader = new FileReader();
 
     reader.onload = async function (event) {
-      const csvText = event.target.result;
-      const importedRows = parseCSV(csvText);
-
-      const { matchedRows, unmatchedRows } = matchRowsToContracts(importedRows);
-
-      const rowsForSupabase = formatRowsForSupabase(matchedRows);
-
-      const contractIds = getUniqueContractIds(rowsForSupabase);
-
-      const existingRows = await getExistingStudentRecords(contractIds);
-
-      const activityItems = compareStudentRecords(
-        existingRows,
-        rowsForSupabase,
-      );
-
       try {
         setIsUploading(true);
         setUploadError("");
         setUploadMessage("");
 
+        // 1. Read the CSV file contents
+        const csvText = event.target.result;
+
+        // 2. Convert the CSV text into normal JavaScript rows
+        const importedRows = parseCSV(csvText);
+
+        // 3. Match each CSV row to an existing Supabase contract
+        const { matchedRows, unmatchedRows } = matchRowsToContracts(
+          importedRows,
+          contracts,
+        );
+
+        if (matchedRows.length === 0) {
+          throw new Error("No rows matched an existing contract.");
+        }
+
+        // 4. Convert matched rows into the shape expected by student_records
+        const rowsForSupabase = formatStudentRowsForSupabase(matchedRows);
+
+        // 5. Get the contract IDs included in this upload
+        const contractIds = getUniqueContractIds(rowsForSupabase);
+
+        // 6. Fetch old student records before replacing them
+        // This is needed so we can compare old data vs new CSV data
+        const existingRows = await getExistingStudentRecords(contractIds);
+
+        // 7. Compare old records to new records and create recent activity messages
+        const activityItems = compareStudentRecords(
+          existingRows,
+          rowsForSupabase,
+        );
+
+        // 8. Replace student_records with the latest CSV data
         const insertedRows = await uploadRowsToSupabase(rowsForSupabase);
+
+        // 9. Save recent activity messages for the homepage
         const savedActivityItems = await saveActivityItems(activityItems);
 
+        // 10. Update modal UI
         setUploadMessage(`${insertedRows.length} learner records uploaded.`);
         setParsedRows(matchedRows);
 
+        // 11. Let AdminHome know what happened
         onImport({
           matchedRows,
           unmatchedRows,
@@ -279,14 +112,6 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
       } finally {
         setIsUploading(false);
       }
-
-      console.log("Activity items:", activityItems);
-
-      console.log("Existing rows from Supabase:", existingRows);
-
-      console.log("Matched rows:", matchedRows);
-      console.log("Unmatched rows:", unmatchedRows);
-      console.log("Rows formatted for Supabase:", rowsForSupabase);
     };
 
     reader.readAsText(selectedFile);

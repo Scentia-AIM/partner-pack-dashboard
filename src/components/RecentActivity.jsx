@@ -15,8 +15,6 @@ function formatActivityMessage(message) {
 export default function RecentActivity({
   expiringThisMonth,
   inactiveLearners,
-  latestUnitCompleted,
-  latestWorkshopAttendance,
   activityItems,
 }) {
   return (

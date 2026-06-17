@@ -35,9 +35,6 @@ export default function AdminHome() {
       )
       .order("contract_number", { ascending: true });
 
-    console.log("Supabase contracts:", data);
-    console.log("Supabase error:", error);
-
     if (error) {
       console.error("Could not load contracts:", error);
       return;
@@ -87,12 +84,7 @@ export default function AdminHome() {
     unmatchedRows,
     rowsForSupabase,
     activityItems,
-  }) {
-    console.log("Matched rows ready for Supabase:", matchedRows);
-    console.log("Unmatched rows:", unmatchedRows);
-    console.log("Rows formatted for Supabase:", rowsForSupabase);
-    console.log("Activity items for homepage:", activityItems);
-  }
+  }) {}
 
   return (
     <div className="admin-overview">
