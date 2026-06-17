@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabaseClient";
 
-export default function ImportCSVModal({ closeModal, onImport }) {
+export default function ImportCSVModal({ closeModal, onImport, contracts }) {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [parsedRows, setParsedRows] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState("");
+  const [uploadError, setUploadError] = useState("");
 
   useEffect(() => {
     function handleEscKey(event) {
@@ -48,14 +53,136 @@ export default function ImportCSVModal({ closeModal, onImport }) {
         id: index + 1,
         clientName: row.clientName,
         contractNumber: row.contractNumber,
-        seatsUsed: Number(row.seatsUsed),
-        seatAllocation: Number(row.seatAllocation),
-        lastUpload: row.lastUpload,
-        status: row.status,
+        learnerName: row.learnerName,
+        location: row.location,
+        courseName: row.courseName,
+        courseType: row.courseType,
+        unitsCompleted: Number(row.unitsCompleted),
+        totalUnits: Number(row.totalUnits),
+        lastProgressDate: row.lastProgressDate || null,
+        endDate: row.endDate || null,
+        attended: row.attended === "true",
       };
     });
 
     return rows;
+  }
+
+  function matchRowsToContracts(rows) {
+    const matchedRows = [];
+    const unmatchedRows = [];
+
+    rows.forEach((row) => {
+      const matchingContract = contracts.find((contract) => {
+        return (
+          contract.clientName.toLowerCase() === row.clientName.toLowerCase() &&
+          String(contract.contractNumber) === String(row.contractNumber)
+        );
+      });
+
+      if (!matchingContract) {
+        unmatchedRows.push(row);
+        return;
+      }
+
+      matchedRows.push({
+        ...row,
+        contract_id: matchingContract.id,
+      });
+    });
+
+    return {
+      matchedRows,
+      unmatchedRows,
+    };
+  }
+
+  function formatRowsForSupabase(rows) {
+    return rows.map((row) => ({
+      contract_id: row.contract_id,
+      learner_name: row.learnerName,
+      location: row.location,
+      course_name: row.courseName,
+      course_type: row.courseType,
+      units_completed: row.unitsCompleted,
+      total_units: row.totalUnits,
+      last_progress_date: row.lastProgressDate,
+      end_date: row.endDate,
+      attended: row.attended,
+    }));
+  }
+
+  function getUniqueContractIds(rows) {
+    return [...new Set(rows.map((row) => row.contract_id))];
+  }
+
+  async function getExistingStudentRecords(contractIds) {
+    const { data, error } = await supabase
+      .from("student_records")
+      .select("*")
+      .in("contract_id", contractIds);
+
+    if (error) {
+      console.error("Existing student records error:", error);
+      return [];
+    }
+
+    return data;
+  }
+
+  async function uploadRowsToSupabase(rowsForSupabase) {
+    const contractIds = getUniqueContractIds(rowsForSupabase);
+
+    const { error: deleteError } = await supabase
+      .from("student_records")
+      .delete()
+      .in("contract_id", contractIds);
+
+    if (deleteError) {
+      console.error("Delete error:", deleteError);
+      throw new Error("Could not clear existing student records.");
+    }
+
+    const { data, error: insertError } = await supabase
+      .from("student_records")
+      .insert(rowsForSupabase)
+      .select();
+
+    if (insertError) {
+      console.error("Insert error:", insertError);
+      throw new Error("Could not upload new student records.");
+    }
+
+    return data;
+  }
+
+  function createRecordKey(row) {
+    return `${row.contract_id}-${row.learner_name}-${row.course_name}`;
+  }
+
+  function compareStudentRecords(existingRows, newRows) {
+    const activityItems = [];
+
+    existingRows.forEach((existingRow) => {
+      const matchingNewRow = newRows.find((newRow) => {
+        return createRecordKey(newRow) === createRecordKey(existingRow);
+      });
+
+      if (!matchingNewRow) return;
+
+      if (matchingNewRow.units_completed > existingRow.units_completed) {
+        activityItems.push({
+          type: "unit_progress",
+          learnerName: matchingNewRow.learner_name,
+          courseName: matchingNewRow.course_name,
+          oldUnitsCompleted: existingRow.units_completed,
+          newUnitsCompleted: matchingNewRow.units_completed,
+          message: `${matchingNewRow.learner_name} progressed from ${existingRow.units_completed} to ${matchingNewRow.units_completed} units in ${matchingNewRow.course_name}`,
+        });
+      }
+    });
+
+    return activityItems;
   }
 
   function handleUpload() {
@@ -63,11 +190,59 @@ export default function ImportCSVModal({ closeModal, onImport }) {
 
     const reader = new FileReader();
 
-    reader.onload = function (event) {
+    reader.onload = async function (event) {
       const csvText = event.target.result;
-      const importedClients = parseCSV(csvText);
+      const importedRows = parseCSV(csvText);
 
-      onImport(importedClients);
+      const { matchedRows, unmatchedRows } = matchRowsToContracts(importedRows);
+
+      const rowsForSupabase = formatRowsForSupabase(matchedRows);
+
+      const contractIds = getUniqueContractIds(rowsForSupabase);
+
+      const existingRows = await getExistingStudentRecords(contractIds);
+
+      const activityItems = compareStudentRecords(
+        existingRows,
+        rowsForSupabase,
+      );
+
+      try {
+        setIsUploading(true);
+        setUploadError("");
+        setUploadMessage("");
+
+        const insertedRows = await uploadRowsToSupabase(rowsForSupabase);
+
+        setUploadMessage(`${insertedRows.length} learner records uploaded.`);
+        setParsedRows(matchedRows);
+
+        onImport({
+          matchedRows,
+          unmatchedRows,
+          rowsForSupabase,
+        });
+      } catch (error) {
+        setUploadError(error.message);
+      } finally {
+        setIsUploading(false);
+      }
+
+      console.log("Activity items:", activityItems);
+
+      console.log("Existing rows from Supabase:", existingRows);
+
+      console.log("Matched rows:", matchedRows);
+      console.log("Unmatched rows:", unmatchedRows);
+      console.log("Rows formatted for Supabase:", rowsForSupabase);
+
+      // setParsedRows(matchedRows);
+
+      // onImport({
+      //   matchedRows,
+      //   unmatchedRows,
+      //   rowsForSupabase,
+      // });
     };
 
     reader.readAsText(selectedFile);
@@ -87,10 +262,18 @@ export default function ImportCSVModal({ closeModal, onImport }) {
         </button>
 
         <form className="m-t-32">
-          <label class="drop-container" id="dropcontainer">
+          <label className="drop-container" id="dropcontainer">
             <span>Upload master CSV file</span>
             <input type="file" accept=".csv" onChange={handleFileChange} />
             {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+            {parsedRows.length > 0 && (
+              <p>{parsedRows.length} learner records found.</p>
+            )}
+            {isUploading && <p>Uploading learner records...</p>}
+
+            {uploadMessage && <p>{uploadMessage}</p>}
+
+            {uploadError && <p className="error">{uploadError}</p>}
           </label>
 
           <div className="modal-actions">
@@ -105,10 +288,10 @@ export default function ImportCSVModal({ closeModal, onImport }) {
             <button
               className="btn upload"
               type="button"
-              disabled={!selectedFile}
+              disabled={!selectedFile || isUploading}
               onClick={handleUpload}
             >
-              Publish master CSV
+              {isUploading ? "Uploading..." : "Publish master CSV"}
             </button>
           </div>
         </form>

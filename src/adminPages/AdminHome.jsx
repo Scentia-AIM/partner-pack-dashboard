@@ -1,6 +1,5 @@
 import ClientTable from "../components/ClientTable";
 import "../styles/admin-overview.css";
-import { mockClients } from "../data/mockClients";
 import { useState, useEffect } from "react";
 import AdminFilterBar from "../components/AdminFilterBar";
 import ImportCSVModal from "../components/ImportCSVModal";
@@ -40,8 +39,7 @@ export default function AdminHome() {
     console.log("Supabase error:", error);
 
     if (error) {
-      setErrorMessage("Could not load contracts.");
-      setIsLoading(false);
+      console.error("Could not load contracts:", error);
       return;
     }
 
@@ -84,9 +82,15 @@ export default function AdminHome() {
     setIsImportCSVModalOpen(false);
   }
 
-  function handleCSVImport(importedClients) {
-    setClients(importedClients);
-    closeImportCSVModal();
+  // function handleCSVImport(importedClients) {
+  //   setClients(importedClients);
+  //   closeImportCSVModal();
+  // }
+
+  function handleCSVImport({ matchedRows, unmatchedRows, rowsForSupabase }) {
+    console.log("Matched rows ready for Supabase:", matchedRows);
+    console.log("Unmatched rows:", unmatchedRows);
+    console.log("Rows formatted for Supabase:", rowsForSupabase);
   }
 
   return (
@@ -116,6 +120,7 @@ export default function AdminHome() {
         <ImportCSVModal
           closeModal={closeImportCSVModal}
           onImport={handleCSVImport}
+          contracts={clients}
         />
       )}
     </div>

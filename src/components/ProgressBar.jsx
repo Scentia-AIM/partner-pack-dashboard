@@ -3,7 +3,10 @@ export default function ProgressBar({ unitsCompleted, totalUnits }) {
   return (
     <div>
       <div className="progress-bar">
-        <div className="progress" style={{ width: `${progress}%` }}>
+        <div
+          className={`progress progress-${progress}`}
+          style={{ width: `${progress}%` }}
+        >
           {progress}%
         </div>
       </div>
