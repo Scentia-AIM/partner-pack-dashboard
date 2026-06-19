@@ -3,12 +3,14 @@
 
 .admin-overview .filter-bar {
   display: grid;
-  gap: 2rem;
-  grid-template-columns: 1fr 150px auto auto;
+  gap: 1rem;
+  grid-template-columns: 1fr 150px auto auto auto;
 }
 
 .admin-overview .filter-bar select,
-.admin-overview .filter-bar input {
+.admin-overview .filter-bar input,
+.modal-overlay .modal .form-group select,
+.modal-overlay .modal .form-group input {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -28,8 +30,15 @@
   background-size: 14px 9px;
 }
 
-.admin-overview .filter-bar input {
+.admin-overview .filter-bar input,
+.modal-overlay .modal .form-group input {
   background: none;
+}
+
+.modal-overlay .modal .form-group select,
+.modal-overlay .modal .form-group input {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-overview .head {
@@ -160,6 +169,11 @@
   min-height: 200px;
   cursor: pointer;
   transition: background-color 0.1s ease-in-out;
+}
+
+.modal-overlay .modal .modal-actions {
+  display: flex;
+  gap: 1rem;
 }
 
 .drop-container:hover {

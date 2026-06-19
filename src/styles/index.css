@@ -119,6 +119,18 @@ div {
   color: var(--primary-color);
 }
 
+.btn.secondary {
+  background-color: #ffffff;
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn.secondary:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #ffffff;
+}
+
 .btn.upload {
   background-color: #ffeafe;
   color: #732d81;

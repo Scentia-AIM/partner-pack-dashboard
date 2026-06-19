@@ -4,12 +4,15 @@ import { useState, useEffect } from "react";
 import AdminFilterBar from "../components/AdminFilterBar";
 import ImportCSVModal from "../components/ImportCSVModal";
 import { supabase } from "../lib/supabaseClient";
+import CreateContractModal from "../components/CreateContractModal";
 
 export default function AdminHome() {
   const [clients, setClients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [status, setStatus] = useState("all");
   const [isImportCSVModalOpen, setIsImportCSVModalOpen] = useState(false);
+  const [isCreateContractModalOpen, setIsCreateContractModalOpen] =
+    useState(false);
 
   useEffect(() => {
     getContracts();
@@ -22,6 +25,7 @@ export default function AdminHome() {
       .select(
         `
       id,
+      client_id,
       contract_number,
       seat_allocation,
       status,
@@ -30,6 +34,9 @@ export default function AdminHome() {
       last_upload_at,
       clients (
         name
+      ),
+      student_records (
+        id
       )
     `,
       )
@@ -42,9 +49,10 @@ export default function AdminHome() {
 
     const formattedClients = data.map((row) => ({
       id: row.id,
+      clientId: row.client_id,
       clientName: row.clients?.name,
       contractNumber: row.contract_number,
-      seatsUsed: 0,
+      seatsUsed: row.student_records?.length || 0,
       seatAllocation: row.seat_allocation,
       lastUpload: row.last_upload_at,
       status: row.status,
@@ -79,6 +87,14 @@ export default function AdminHome() {
     setIsImportCSVModalOpen(false);
   }
 
+  function openCreateContractModal() {
+    setIsCreateContractModalOpen(true);
+  }
+
+  function closeCreateContractModal() {
+    setIsCreateContractModalOpen(false);
+  }
+
   function handleCSVImport({
     matchedRows,
     unmatchedRows,
@@ -105,6 +121,7 @@ export default function AdminHome() {
         setStatus={setStatus}
         resetFilters={resetFilters}
         openImportCSVModal={openImportCSVModal}
+        openCreateContractModal={openCreateContractModal}
       />
 
       <ClientTable clients={filteredClients} />
@@ -114,6 +131,13 @@ export default function AdminHome() {
           closeModal={closeImportCSVModal}
           onImport={handleCSVImport}
           contracts={clients}
+        />
+      )}
+      {isCreateContractModalOpen && (
+        <CreateContractModal
+          closeModal={closeCreateContractModal}
+          clients={clients}
+          onContractCreated={getContracts}
         />
       )}
     </div>
