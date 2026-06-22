@@ -9,6 +9,9 @@ export default function CreateContractModal({
   const [clientMode, setClientMode] = useState("existing");
   const [clientId, setClientId] = useState("");
   const [newClientName, setNewClientName] = useState("");
+  const [accessEmail, setAccessEmail] = useState("");
+  const [accessPassword, setAccessPassword] = useState("");
+
   const [contractNumber, setContractNumber] = useState("");
   const [seatAllocation, setSeatAllocation] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -45,6 +48,41 @@ export default function CreateContractModal({
     }
   }
 
+  async function testCreateClientContractFunction() {
+    const { data, error } = await supabase.functions.invoke(
+      "create-client-contract",
+      {
+        body: {
+          clientName: newClientName,
+          email: accessEmail,
+          password: accessPassword,
+          contractNumber,
+          seatAllocation,
+          startDate,
+          endDate,
+          status,
+        },
+      },
+    );
+
+    if (error) {
+      let errorMessage = "Unknown function error.";
+
+      try {
+        const errorDetails = await error.context.json();
+        errorMessage = errorDetails.error;
+        console.error("Function error details:", errorDetails);
+      } catch {
+        console.error("Function error:", error);
+      }
+
+      setFormError(errorMessage);
+      return;
+    }
+
+    console.log("Function response:", data);
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -55,6 +93,16 @@ export default function CreateContractModal({
 
     if (clientMode === "new" && !newClientName.trim()) {
       setFormError("Please enter a new client name.");
+      return;
+    }
+
+    if (clientMode === "new" && !accessEmail.trim()) {
+      setFormError("Please enter a client login email.");
+      return;
+    }
+
+    if (clientMode === "new" && !accessPassword.trim()) {
+      setFormError("Please enter a client login password.");
       return;
     }
 
@@ -71,20 +119,45 @@ export default function CreateContractModal({
       let selectedClientId = clientId;
 
       if (clientMode === "new") {
-        const { data: newClient, error: clientError } = await supabase
-          .from("clients")
-          .insert({
-            name: newClientName.trim(),
-          })
-          .select()
-          .single();
+        const { data, error } = await supabase.functions.invoke(
+          "create-client-contract",
+          {
+            body: {
+              clientName: newClientName.trim(),
+              email: accessEmail.trim(),
+              password: accessPassword.trim(),
+              contractNumber,
+              seatAllocation,
+              startDate,
+              endDate,
+              status,
+            },
+          },
+        );
 
-        if (clientError) {
-          console.error("Create client error:", clientError);
-          throw new Error("Could not create client.");
+        if (error) {
+          let errorMessage = "Could not create client and contract.";
+
+          try {
+            const errorDetails = await error.context.json();
+            errorMessage = errorDetails.error || errorMessage;
+            console.error(
+              "Create client contract function error:",
+              errorDetails,
+            );
+          } catch {
+            console.error("Create client contract function error:", error);
+          }
+
+          throw new Error(errorMessage);
         }
 
-        selectedClientId = newClient.id;
+        console.log("Created client and contract:", data);
+
+        setFormMessage("Client and contract created successfully.");
+        await onContractCreated();
+        closeModal();
+        return;
       }
 
       const { data, error } = await supabase
@@ -146,6 +219,8 @@ export default function CreateContractModal({
                 setClientMode("existing");
                 setClientId(value);
                 setNewClientName("");
+                setAccessEmail("");
+                setAccessPassword("");
               }}
             >
               <option value="">Select client</option>
@@ -161,16 +236,41 @@ export default function CreateContractModal({
           </div>
 
           {clientMode === "new" && (
-            <div className="form-group">
-              <label htmlFor="newClientName">New client name</label>
-              <input
-                id="newClientName"
-                type="text"
-                value={newClientName}
-                onChange={(event) => setNewClientName(event.target.value)}
-                placeholder="Enter client name"
-              />
-            </div>
+            <>
+              <div className="form-group">
+                <label htmlFor="newClientName">New client name</label>
+                <input
+                  id="newClientName"
+                  type="text"
+                  value={newClientName}
+                  onChange={(event) => setNewClientName(event.target.value)}
+                  placeholder="Enter client name"
+                />
+              </div>
+
+              <div className="form-group col-2">
+                <div>
+                  <label htmlFor="accessEmail">Client login email</label>
+                  <input
+                    id="accessEmail"
+                    type="email"
+                    value={accessEmail}
+                    onChange={(event) => setAccessEmail(event.target.value)}
+                    placeholder="Enter login email"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="accessPassword">Client login password</label>
+                  <input
+                    id="accessPassword"
+                    type="text"
+                    value={accessPassword}
+                    onChange={(event) => setAccessPassword(event.target.value)}
+                    placeholder="Enter temporary password"
+                  />
+                </div>
+              </div>
+            </>
           )}
 
           <div className="form-group">
@@ -225,7 +325,7 @@ export default function CreateContractModal({
             </select>
           </div>
 
-          <div className="modal-actions">
+          <div className="modal-actions m-t-16">
             <button
               className="btn secondary"
               type="button"

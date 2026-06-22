@@ -1,13 +1,14 @@
 import aimLogo from "../assets/aim-logo.png";
 import { useState } from "react";
 import "../styles/login.css";
+import { supabase } from "../lib/supabaseClient";
 
 export default function ClientLogin({ currentContract, onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     if (!email || !password) {
@@ -15,8 +16,27 @@ export default function ClientLogin({ currentContract, onLogin }) {
       return;
     }
 
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      console.error("Login error:", error);
+      setLoginError("The email or password entered is incorrect.");
+      return;
+    }
+
+    console.log("Logged in user:", data.user);
+
+    if (data.user.id !== currentContract.clients.auth_user_id) {
+      await supabase.auth.signOut();
+      setLoginError("You do not have access to this dashboard.");
+      return;
+    }
+
     setLoginError("");
-    onLogin();
+    onLogin(data.user);
   }
   return (
     <div className="login">

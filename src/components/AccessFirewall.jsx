@@ -59,7 +59,8 @@ export default function AccessFirewall({ children }) {
             end_date,
             last_upload_at,
             clients (
-              name
+              name,
+              auth_user_id
             )
           `,
         )
@@ -76,6 +77,7 @@ export default function AccessFirewall({ children }) {
         return createSlug(contract.clients.name) === clientName;
       });
 
+      console.log("Current contract auth link:", matchingContract.clients);
       if (!matchingContract) {
         setCurrentContract(null);
         setStudentRecords([]);
