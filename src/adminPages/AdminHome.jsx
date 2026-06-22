@@ -35,7 +35,9 @@ export default function AdminHome() {
       end_date,
       last_upload_at,
       clients (
-        name
+        name,
+        auth_user_id,
+        login_email
       ),
       student_records (
         id
@@ -60,6 +62,8 @@ export default function AdminHome() {
       status: row.status,
       startDate: row.start_date,
       endDate: row.end_date,
+      authUserId: row.clients?.auth_user_id,
+      loginEmail: row.clients?.login_email,
     }));
 
     setClients(formattedClients);
@@ -146,6 +150,7 @@ export default function AdminHome() {
           contracts={clients}
         />
       )}
+
       {isCreateContractModalOpen && (
         <CreateContractModal
           closeModal={closeCreateContractModal}

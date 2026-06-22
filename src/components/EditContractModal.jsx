@@ -97,6 +97,11 @@ export default function EditContractModal({
           </div>
 
           <div className="form-group">
+            <label>Client login email</label>
+            <input type="email" value={contract.loginEmail || ""} disabled />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="seatAllocation">Seat allocation</label>
             <input
               id="seatAllocation"
@@ -140,7 +145,7 @@ export default function EditContractModal({
 
           {formError && <p className="error">{formError}</p>}
 
-          <div className="modal-actions">
+          <div className="modal-actions m-t-16">
             <button
               className="btn secondary"
               type="button"
