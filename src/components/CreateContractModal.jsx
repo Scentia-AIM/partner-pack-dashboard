@@ -6,7 +6,9 @@ export default function CreateContractModal({
   clients,
   onContractCreated,
 }) {
+  const [clientMode, setClientMode] = useState("existing");
   const [clientId, setClientId] = useState("");
+  const [newClientName, setNewClientName] = useState("");
   const [contractNumber, setContractNumber] = useState("");
   const [seatAllocation, setSeatAllocation] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -46,10 +48,18 @@ export default function CreateContractModal({
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!clientId || !contractNumber || !seatAllocation) {
-      setFormError(
-        "Please select a client, enter a contract number and set a seat allocation.",
-      );
+    if (clientMode === "existing" && !clientId) {
+      setFormError("Please select a client.");
+      return;
+    }
+
+    if (clientMode === "new" && !newClientName.trim()) {
+      setFormError("Please enter a new client name.");
+      return;
+    }
+
+    if (!contractNumber || !seatAllocation) {
+      setFormError("Please enter a contract number and set a seat allocation.");
       return;
     }
 
@@ -58,10 +68,29 @@ export default function CreateContractModal({
       setFormError("");
       setFormMessage("");
 
+      let selectedClientId = clientId;
+
+      if (clientMode === "new") {
+        const { data: newClient, error: clientError } = await supabase
+          .from("clients")
+          .insert({
+            name: newClientName.trim(),
+          })
+          .select()
+          .single();
+
+        if (clientError) {
+          console.error("Create client error:", clientError);
+          throw new Error("Could not create client.");
+        }
+
+        selectedClientId = newClient.id;
+      }
+
       const { data, error } = await supabase
         .from("contracts")
         .insert({
-          client_id: clientId,
+          client_id: selectedClientId,
           contract_number: contractNumber,
           seat_allocation: Number(seatAllocation),
           start_date: startDate || null,
@@ -101,20 +130,48 @@ export default function CreateContractModal({
         </button>
         <form className="m-t-32" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="clientId">Client</label>
+            <label htmlFor="clientMode">Client</label>
             <select
-              id="clientId"
-              value={clientId}
-              onChange={(event) => setClientId(event.target.value)}
+              id="clientMode"
+              value={clientMode === "new" ? "new" : clientId}
+              onChange={(event) => {
+                const value = event.target.value;
+
+                if (value === "new") {
+                  setClientMode("new");
+                  setClientId("");
+                  return;
+                }
+
+                setClientMode("existing");
+                setClientId(value);
+                setNewClientName("");
+              }}
             >
               <option value="">Select client</option>
+
               {uniqueClients.map((client) => (
                 <option key={client.clientId} value={client.clientId}>
                   {client.clientName}
                 </option>
               ))}
+
+              <option value="new">+ Add new client</option>
             </select>
           </div>
+
+          {clientMode === "new" && (
+            <div className="form-group">
+              <label htmlFor="newClientName">New client name</label>
+              <input
+                id="newClientName"
+                type="text"
+                value={newClientName}
+                onChange={(event) => setNewClientName(event.target.value)}
+                placeholder="Enter client name"
+              />
+            </div>
+          )}
 
           <div className="form-group">
             <label htmlFor="contractNumber">Contract number</label>

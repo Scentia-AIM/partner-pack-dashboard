@@ -85,11 +85,10 @@ export default function Home({
   if (studentError) {
     return <p className="m-t-32">{studentError}</p>;
   }
-
   return (
     <div className="home">
       <div className="header">
-        <Welcome />
+        <Welcome currentContract={currentContract} />
         <RecentActivity
           expiringThisMonth={expiringThisMonth}
           inactiveLearners={inactiveLearners}
