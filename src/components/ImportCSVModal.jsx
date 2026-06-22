@@ -133,7 +133,19 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
         <form className="m-t-32">
           <label className="drop-container" id="dropcontainer">
             <span>Upload master CSV file</span>
-            <input type="file" accept=".csv" onChange={handleFileChange} />
+            <input
+              id="csvUpload"
+              className="file-input"
+              type="file"
+              accept=".csv"
+              onChange={handleFileChange}
+            />
+            <label
+              className="btn secondary file-upload-btn"
+              htmlFor="csvUpload"
+            >
+              Choose CSV file
+            </label>
             {selectedFile && <p>Selected file: {selectedFile.name}</p>}
             {parsedRows.length > 0 && (
               <p>{parsedRows.length} learner records found.</p>
