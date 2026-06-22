@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function Client({ clients }) {
+export default function Client({ clients, openEditContractModal }) {
   function createSlug(text) {
     return text.toLowerCase().replaceAll(" ", "-");
   }
@@ -29,7 +29,13 @@ export default function Client({ clients }) {
       <p>{client.status}</p>
 
       <div className="actions">
-        <Link>Edit</Link>
+        <button
+          className="link-button"
+          type="button"
+          onClick={() => openEditContractModal(client)}
+        >
+          Edit
+        </button>
         <Link
           to={`/${createSlug(client.clientName)}/${client.contractNumber}/`}
           target="_blank"

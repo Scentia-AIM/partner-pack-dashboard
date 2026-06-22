@@ -99,15 +99,18 @@
   color: var(--primary-color);
 }
 
-.admin-overview .client .actions a {
+.admin-overview .client .actions a,
+.link-button {
   font-size: 0.875rem;
   color: var(--primary-color);
   opacity: 0.5;
   text-decoration: none;
 }
 
-.admin-overview .client .actions a:hover {
+.admin-overview .client .actions a:hover,
+.link-button:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .modal-overlay {

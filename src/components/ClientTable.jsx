@@ -1,7 +1,7 @@
 import Client from "./Client";
 import { useEffect, useState } from "react";
 
-export default function ClientTable({ clients }) {
+export default function ClientTable({ clients, openEditContractModal }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const clientsPerPage = 5;
@@ -55,7 +55,10 @@ export default function ClientTable({ clients }) {
         <p>Actions</p>
       </div>
 
-      <Client clients={visibleClients} />
+      <Client
+        clients={visibleClients}
+        openEditContractModal={openEditContractModal}
+      />
 
       {totalPages > 1 && (
         <div className="pagination m-t-32">

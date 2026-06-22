@@ -5,6 +5,7 @@ import AdminFilterBar from "../components/AdminFilterBar";
 import ImportCSVModal from "../components/ImportCSVModal";
 import { supabase } from "../lib/supabaseClient";
 import CreateContractModal from "../components/CreateContractModal";
+import EditContractModal from "../components/EditContractModal";
 
 export default function AdminHome() {
   const [clients, setClients] = useState([]);
@@ -13,6 +14,7 @@ export default function AdminHome() {
   const [isImportCSVModalOpen, setIsImportCSVModalOpen] = useState(false);
   const [isCreateContractModalOpen, setIsCreateContractModalOpen] =
     useState(false);
+  const [contractBeingEdited, setContractBeingEdited] = useState(null);
 
   useEffect(() => {
     getContracts();
@@ -102,6 +104,14 @@ export default function AdminHome() {
     activityItems,
   }) {}
 
+  function openEditContractModal(contract) {
+    setContractBeingEdited(contract);
+  }
+
+  function closeEditContractModal() {
+    setContractBeingEdited(null);
+  }
+
   return (
     <div className="admin-overview">
       <div className="header">
@@ -124,7 +134,10 @@ export default function AdminHome() {
         openCreateContractModal={openCreateContractModal}
       />
 
-      <ClientTable clients={filteredClients} />
+      <ClientTable
+        clients={filteredClients}
+        openEditContractModal={openEditContractModal}
+      />
 
       {isImportCSVModalOpen && (
         <ImportCSVModal
@@ -138,6 +151,14 @@ export default function AdminHome() {
           closeModal={closeCreateContractModal}
           clients={clients}
           onContractCreated={getContracts}
+        />
+      )}
+
+      {contractBeingEdited && (
+        <EditContractModal
+          contract={contractBeingEdited}
+          closeModal={closeEditContractModal}
+          onContractUpdated={getContracts}
         />
       )}
     </div>
