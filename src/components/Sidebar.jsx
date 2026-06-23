@@ -170,16 +170,16 @@ export default function Sidebar({ currentContract }) {
       <div className="container">
         {!isAdminPage ? (
           <div className="details">
-            <p className="date">
+            {/* <p className="date">
               Last updated: <span>XXXXXXX</span>
-            </p>
+            </p> */}
             <p>
               Contract Number:
               <span> {currentContract?.contract_number}</span>
             </p>
             <p>
               Contract End Date:
-              <span>{formatDate(currentContract?.end_date)}</span>
+              <span> {formatDate(currentContract?.end_date)}</span>
             </p>
           </div>
         ) : (

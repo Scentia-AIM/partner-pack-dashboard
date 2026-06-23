@@ -56,7 +56,7 @@ export default function KeyInsights({
             <span>{learnersOnTrackPercentage}% learners</span> on track to
             complete
           </h3>
-          <Link to="students" className="link">
+          <Link to="students?status=active" className="link">
             View more &gt;
           </Link>
         </div>
@@ -81,7 +81,7 @@ export default function KeyInsights({
           <h3 className="m-16">
             <span>{inactiveLearners} learners</span> require intervention
           </h3>
-          <Link to="students" className="link">
+          <Link to="students?status=inactive" className="link">
             View more &gt;
           </Link>
         </div>

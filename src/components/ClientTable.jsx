@@ -55,10 +55,14 @@ export default function ClientTable({ clients, openEditContractModal }) {
         <p>Actions</p>
       </div>
 
-      <Client
-        clients={visibleClients}
-        openEditContractModal={openEditContractModal}
-      />
+      {clients.length === 0 ? (
+        <p className="m-t-32">No clients match these filters.</p>
+      ) : (
+        <Client
+          clients={visibleClients}
+          openEditContractModal={openEditContractModal}
+        />
+      )}
 
       {totalPages > 1 && (
         <div className="pagination m-t-32">

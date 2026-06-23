@@ -2,15 +2,19 @@ import "../styles/student-overview.css";
 import FilterBar from "../components/FilterBar";
 import StudentTable from "../components/StudentTable";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export default function StudentOverview({
   studentRecords,
   isLoadingStudents,
   studentError,
 }) {
-  const [courseName, setCourseName] = useState("all");
+  const [searchParams] = useSearchParams();
+  const statusFromUrl = searchParams.get("status");
+  const courseFromUrl = searchParams.get("course");
+  const [courseName, setCourseName] = useState(courseFromUrl || "all");
   const [location, setLocation] = useState("all");
-  const [status, setStatus] = useState("all");
+  const [status, setStatus] = useState(statusFromUrl || "all");
 
   const getStatus = (student) => {
     const progress = Math.round(

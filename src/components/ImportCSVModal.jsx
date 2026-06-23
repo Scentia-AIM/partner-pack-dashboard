@@ -157,7 +157,7 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
             {uploadError && <p className="error">{uploadError}</p>}
           </label>
 
-          <div className="modal-actions">
+          <div className="modal-actions m-t-16">
             <button
               className="btn secondary"
               type="button"

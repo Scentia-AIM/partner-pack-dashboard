@@ -15,7 +15,7 @@ export default function CourseCard({ courses, count }) {
         Object.keys(courses).map((courseName) => (
           <div className="course" key={courseName}>
             <div className="title">
-              <p>BSB40920</p>
+              {/* <p>BSB40920</p> */}
               <h3>{courseName}</h3>
             </div>
 
@@ -24,7 +24,10 @@ export default function CourseCard({ courses, count }) {
               {courses[courseName] > 1 ? "Students" : "Student"}
             </p>
 
-            <Link className="link" to={`${clientBasePath}/students`}>
+            <Link
+              className="link"
+              to={`${clientBasePath}/students?course=${courseName}`}
+            >
               View &gt;
             </Link>
           </div>
