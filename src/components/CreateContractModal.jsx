@@ -245,7 +245,6 @@ export default function CreateContractModal({
                     type="text"
                     value={newClientName}
                     onChange={(event) => setNewClientName(event.target.value)}
-                    placeholder="Enter client name"
                   />
                 </div>
                 <div>
@@ -267,7 +266,6 @@ export default function CreateContractModal({
                     type="email"
                     value={accessEmail}
                     onChange={(event) => setAccessEmail(event.target.value)}
-                    placeholder="Enter login email"
                   />
                 </div>
                 <div>
@@ -277,7 +275,6 @@ export default function CreateContractModal({
                     type="text"
                     value={accessPassword}
                     onChange={(event) => setAccessPassword(event.target.value)}
-                    placeholder="Enter temporary password"
                   />
                 </div>
               </div>
