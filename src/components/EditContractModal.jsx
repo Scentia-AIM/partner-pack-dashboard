@@ -86,14 +86,15 @@ export default function EditContractModal({
         </button>
 
         <form className="m-t-32" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Client</label>
-            <input type="text" value={contract.clientName} disabled />
-          </div>
-
-          <div className="form-group">
-            <label>Contract number</label>
-            <input type="text" value={contract.contractNumber} disabled />
+          <div className="form-group col-2">
+            <div>
+              <label>Client</label>
+              <input type="text" value={contract.clientName} disabled />
+            </div>
+            <div>
+              <label>Contract number</label>
+              <input type="text" value={contract.contractNumber} disabled />
+            </div>
           </div>
 
           <div className="form-group">
