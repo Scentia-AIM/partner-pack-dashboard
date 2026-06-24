@@ -237,25 +237,14 @@ export default function CreateContractModal({
 
           {clientMode === "new" && (
             <>
-              <div className="form-group col-2">
-                <div>
-                  <label htmlFor="newClientName">New client name</label>
-                  <input
-                    id="newClientName"
-                    type="text"
-                    value={newClientName}
-                    onChange={(event) => setNewClientName(event.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="contractNumber">Contract number</label>
-                  <input
-                    id="contractNumber"
-                    type="text"
-                    value={contractNumber}
-                    onChange={(event) => setContractNumber(event.target.value)}
-                  />
-                </div>
+              <div className="form-group">
+                <label htmlFor="newClientName">New client name</label>
+                <input
+                  id="newClientName"
+                  type="text"
+                  value={newClientName}
+                  onChange={(event) => setNewClientName(event.target.value)}
+                />
               </div>
 
               <div className="form-group col-2">

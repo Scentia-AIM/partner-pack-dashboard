@@ -3,6 +3,7 @@ import Home from "./clientPages/Home";
 import StudentOverview from "./clientPages/StudentOverview";
 import EnrolledCourses from "./clientPages/EnrolledCourses";
 import StudentLocations from "./clientPages/StudentLocations";
+import AdminFirewall from "./components/AdminFirewall";
 import AccessFirewall from "./components/AccessFirewall";
 import AdminHome from "./adminPages/AdminHome";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -25,9 +26,11 @@ export default function App({}) {
         <Route
           path="/admin"
           element={
-            <AppFrame>
-              <AdminHome />
-            </AppFrame>
+            <AdminFirewall>
+              <AppFrame>
+                <AdminHome />
+              </AppFrame>
+            </AdminFirewall>
           }
         />
 
