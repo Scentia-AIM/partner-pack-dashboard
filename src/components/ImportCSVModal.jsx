@@ -3,6 +3,7 @@ import {
   getExistingStudentRecords,
   uploadRowsToSupabase,
   saveActivityItems,
+  updateContractLastUpload,
 } from "../lib/csvUploadService";
 import {
   parseCSV,
@@ -92,12 +93,15 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
 
         // 8. Replace student_records with the latest CSV data
         const insertedRows = await uploadRowsToSupabase(rowsForSupabase);
+        await updateContractLastUpload(contractIds);
 
         // 9. Save recent activity messages for the homepage
         const savedActivityItems = await saveActivityItems(activityItems);
 
         // 10. Update modal UI
-        setUploadMessage(`${insertedRows.length} learner records uploaded.`);
+        setUploadMessage(
+          `${insertedRows.length} learner records uploaded. ${unmatchedRows.length} rows skipped.`,
+        );
         setParsedRows(matchedRows);
 
         // 11. Let AdminHome know what happened

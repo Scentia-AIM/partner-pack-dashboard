@@ -61,3 +61,15 @@ export async function saveActivityItems(activityItems) {
 
   return data;
 }
+
+export async function updateContractLastUpload(contractIds) {
+  const { error } = await supabase
+    .from("contracts")
+    .update({ last_upload_at: new Date().toISOString() })
+    .in("id", contractIds);
+
+  if (error) {
+    console.error("Update last upload error:", error);
+    throw new Error("Could not update contract upload date.");
+  }
+}
