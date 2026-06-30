@@ -1,8 +1,17 @@
 import { Link } from "react-router-dom";
 
-export default function Client({ clients, openEditContractModal }) {
+export default function Client({
+  clients,
+  openEditContractModal,
+  openClientCSVModal,
+}) {
   function createSlug(text) {
-    return text.toLowerCase().replaceAll(" ", "-");
+    return String(text || "")
+      .toLowerCase()
+      .trim()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   }
 
   const formatDate = (iso) => {
@@ -19,7 +28,7 @@ export default function Client({ clients, openEditContractModal }) {
   return clients.map((client) => (
     <div className="client col-6" key={client.id}>
       <p>{client.clientName}</p>
-      <p>Contract {client.contractNumber}</p>
+      <p>{client.contractNumber}</p>
       <p>
         {client.seatsUsed}
         <span> / {client.seatAllocation}</span>
@@ -35,6 +44,13 @@ export default function Client({ clients, openEditContractModal }) {
           onClick={() => openEditContractModal(client)}
         >
           Edit
+        </button>
+        <button
+          type="button"
+          className="link-button"
+          onClick={() => openClientCSVModal(client)}
+        >
+          Single CSV Upload
         </button>
         <Link
           to={`/${createSlug(client.clientName)}/${client.contractNumber}/`}

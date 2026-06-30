@@ -1,15 +1,42 @@
+function parseCSVLine(line) {
+  const values = [];
+  let currentValue = "";
+  let insideQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const character = line[i];
+
+    if (character === '"') {
+      insideQuotes = !insideQuotes;
+    } else if (character === "," && !insideQuotes) {
+      values.push(currentValue.trim());
+      currentValue = "";
+    } else {
+      currentValue += character;
+    }
+  }
+
+  values.push(currentValue.trim());
+
+  return values;
+}
+
 // Converts the raw CSV text into an array of learner row objects.
 // This is the first step after the browser reads the uploaded file.
 export function parseCSV(csvText) {
-  const lines = csvText.trim().split("\n");
+  const lines = csvText
+    .trim()
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
 
-  const headers = lines[0].split(",").map((header) => header.trim());
+  const headers = parseCSVLine(lines[0]).map((header) => header.trim());
 
   const rows = lines.slice(1).map((line, index) => {
-    const values = line.split(",").map((value) => value.trim());
+    const values = parseCSVLine(line);
 
     const row = headers.reduce((object, header, headerIndex) => {
-      object[header] = values[headerIndex];
+      object[header] = values[headerIndex] || "";
       return object;
     }, {});
 

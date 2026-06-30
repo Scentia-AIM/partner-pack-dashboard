@@ -6,7 +6,12 @@ import DashboardNotFound from "./DashboardNotFound";
 import aimLogo from "../assets/aim-logo.png";
 
 function createSlug(text) {
-  return text.toLowerCase().replaceAll(" ", "-");
+  return String(text || "")
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function formatStudentRecords(data) {
@@ -26,10 +31,12 @@ function formatStudentRecords(data) {
 }
 
 export default function AccessFirewall({ children }) {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [hasCheckedUser, setHasCheckedUser] = useState(false);
+
   const [currentContract, setCurrentContract] = useState(null);
   const [isLoadingContract, setIsLoadingContract] = useState(true);
   const [contractError, setContractError] = useState("");
-  const [isClientLoggedIn, setIsClientLoggedIn] = useState(false);
 
   const [studentRecords, setStudentRecords] = useState([]);
   const [isLoadingStudents, setIsLoadingStudents] = useState(false);
@@ -41,79 +48,125 @@ export default function AccessFirewall({ children }) {
   const clientName = pathParts[0];
   const contractNumber = pathParts[1];
 
-  useEffect(() => {
-    async function getCurrentContract() {
-      setIsLoadingContract(true);
-      setContractError("");
+  async function getCurrentContract() {
+    setIsLoadingContract(true);
+    setContractError("");
+    setStudentError("");
 
-      const { data, error } = await supabase
-        .from("contracts")
-        .select(
-          `
-            id,
-            client_id,
-            contract_number,
-            seat_allocation,
-            status,
-            start_date,
-            end_date,
-            last_upload_at,
-            clients (
-              name,
-              auth_user_id
-            )
-          `,
-        )
-        .eq("contract_number", contractNumber);
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-      if (error) {
-        console.error("Supabase contract error:", error);
-        setContractError("Could not load this contract.");
-        setIsLoadingContract(false);
-        return;
-      }
-
-      const matchingContract = data.find((contract) => {
-        return createSlug(contract.clients.name) === clientName;
-      });
-
-      console.log("Current contract auth link:", matchingContract.clients);
-      if (!matchingContract) {
-        setCurrentContract(null);
-        setStudentRecords([]);
-        setIsLoadingContract(false);
-        return;
-      }
-
-      setCurrentContract(matchingContract);
+    if (userError) {
+      console.error("Supabase user error:", userError);
+      setCurrentUser(null);
+      setHasCheckedUser(true);
+      setCurrentContract(null);
+      setStudentRecords([]);
       setIsLoadingContract(false);
-
-      setIsLoadingStudents(true);
-      setStudentError("");
-
-      const { data: studentsData, error: studentsError } = await supabase
-        .from("student_records")
-        .select("*")
-        .eq("contract_id", matchingContract.id)
-        .order("learner_name", { ascending: true });
-
-      if (studentsError) {
-        console.error("Student records error:", studentsError);
-        setStudentError("Could not load student records.");
-        setIsLoadingStudents(false);
-        return;
-      }
-
-      setStudentRecords(formatStudentRecords(studentsData));
-      setIsLoadingStudents(false);
+      return;
     }
 
+    setCurrentUser(user || null);
+    setHasCheckedUser(true);
+
+    if (!user) {
+      setCurrentContract(null);
+      setStudentRecords([]);
+      setIsLoadingContract(false);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("contracts")
+      .select(
+        `
+          id,
+          client_id,
+          contract_number,
+          seat_allocation,
+          status,
+          start_date,
+          end_date,
+          last_upload_at,
+          clients (
+            name,
+            auth_user_id
+          )
+        `,
+      )
+      .eq("contract_number", contractNumber);
+
+    if (error) {
+      console.error("Supabase contract error:", error);
+      setContractError("Could not load this contract.");
+      setCurrentContract(null);
+      setStudentRecords([]);
+      setIsLoadingContract(false);
+      return;
+    }
+
+    const matchingContract = data.find((contract) => {
+      const contractClientName = contract.clients?.name;
+
+      if (!contractClientName) return false;
+
+      return createSlug(contractClientName) === clientName;
+    });
+
+    if (!matchingContract) {
+      console.log("No matching contract found for:", {
+        clientName,
+        contractNumber,
+        data,
+        loggedInUser: user.email,
+      });
+
+      setCurrentContract(null);
+      setStudentRecords([]);
+      setIsLoadingContract(false);
+      return;
+    }
+
+    setCurrentContract(matchingContract);
+    setIsLoadingContract(false);
+
+    setIsLoadingStudents(true);
+
+    const { data: studentsData, error: studentsError } = await supabase
+      .from("student_records")
+      .select("*")
+      .eq("contract_id", matchingContract.id)
+      .order("learner_name", { ascending: true });
+
+    if (studentsError) {
+      console.error("Student records error:", studentsError);
+      setStudentError("Could not load student records.");
+      setIsLoadingStudents(false);
+      return;
+    }
+
+    setStudentRecords(formatStudentRecords(studentsData));
+    setIsLoadingStudents(false);
+  }
+
+  useEffect(() => {
     if (clientName && contractNumber) {
       getCurrentContract();
     }
   }, [clientName, contractNumber]);
 
-  if (isLoadingContract) {
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+
+    setCurrentUser(null);
+    setCurrentContract(null);
+    setStudentRecords([]);
+    setHasCheckedUser(true);
+  }
+
+  if (!hasCheckedUser || isLoadingContract) {
     return (
       <div className="loading">
         <img alt="AIM Logo" src={aimLogo} />
@@ -131,18 +184,14 @@ export default function AccessFirewall({ children }) {
     );
   }
 
-  if (!currentContract) {
-    return <DashboardNotFound />;
+  if (!currentUser) {
+    return <ClientLogin onLogin={getCurrentContract} />;
   }
 
-  if (!isClientLoggedIn) {
-    return (
-      <ClientLogin
-        currentContract={currentContract}
-        onLogin={() => setIsClientLoggedIn(true)}
-      />
-    );
+  if (!currentContract) {
+    return <DashboardNotFound handleSignOut={handleSignOut} />;
   }
+
   return children({
     currentContract,
     studentRecords,

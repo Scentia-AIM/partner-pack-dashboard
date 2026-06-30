@@ -48,7 +48,7 @@
 .admin-overview .head {
   gap: 2rem;
   border-bottom: 1px solid #f2f4f7;
-  grid-template-columns: 120px 120px 120px 120px 120px 1fr;
+  grid-template-columns: 120px 120px 120px 120px 80px 1fr;
 }
 
 .admin-overview .head p {
@@ -60,7 +60,7 @@
   padding: 1rem 0;
   border-bottom: 1px solid #f2f4f7;
   align-items: center;
-  grid-template-columns: 120px 120px 120px 120px 120px 1fr;
+  grid-template-columns: 120px 120px 120px 120px 80px 1fr;
 }
 
 .admin-overview .client p {

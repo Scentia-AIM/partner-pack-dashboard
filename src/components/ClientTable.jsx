@@ -1,7 +1,11 @@
 import Client from "./Client";
 import { useEffect, useState } from "react";
 
-export default function ClientTable({ clients, openEditContractModal }) {
+export default function ClientTable({
+  clients,
+  openEditContractModal,
+  openClientCSVModal,
+}) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const clientsPerPage = 5;
@@ -61,6 +65,7 @@ export default function ClientTable({ clients, openEditContractModal }) {
         <Client
           clients={visibleClients}
           openEditContractModal={openEditContractModal}
+          openClientCSVModal={openClientCSVModal}
         />
       )}
 

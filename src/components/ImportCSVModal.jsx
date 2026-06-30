@@ -65,6 +65,11 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
         // 2. Convert the CSV text into normal JavaScript rows
         const importedRows = parseCSV(csvText);
 
+        console.log("Imported rows:", importedRows);
+        console.log("First imported row:", importedRows[0]);
+        console.log("Contracts passed into ImportCSVModal:", contracts);
+        console.log("First contract:", contracts[0]);
+
         // 3. Match each CSV row to an existing Supabase contract
         const { matchedRows, unmatchedRows } = matchRowsToContracts(
           importedRows,
@@ -120,7 +125,6 @@ export default function ImportCSVModal({ closeModal, onImport, contracts }) {
 
     reader.readAsText(selectedFile);
   }
-
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal card">

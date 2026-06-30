@@ -3,10 +3,11 @@ import { useState } from "react";
 import "../styles/login.css";
 import { supabase } from "../lib/supabaseClient";
 
-export default function ClientLogin({ currentContract, onLogin }) {
+export default function ClientLogin({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -16,6 +17,9 @@ export default function ClientLogin({ currentContract, onLogin }) {
       return;
     }
 
+    setIsLoggingIn(true);
+    setLoginError("");
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -24,27 +28,26 @@ export default function ClientLogin({ currentContract, onLogin }) {
     if (error) {
       console.error("Login error:", error);
       setLoginError("The email or password entered is incorrect.");
+      setIsLoggingIn(false);
       return;
     }
 
     console.log("Logged in user:", data.user);
 
-    if (data.user.id !== currentContract.clients.auth_user_id) {
-      await supabase.auth.signOut();
-      setLoginError("You do not have access to this dashboard.");
-      return;
-    }
+    await onLogin();
 
-    setLoginError("");
-    onLogin(data.user);
+    setIsLoggingIn(false);
   }
+
   return (
     <div className="login">
       <div className="gradient-top"></div>
       <div className="gradient-btm"></div>
+
       <img alt="AIM Logo" src={aimLogo} />
+
       <div className="card">
-        <p>{currentContract.clients.name}</p>
+        <p>Client Portal</p>
         <h1>Premium Partner Pack</h1>
 
         <form onSubmit={handleSubmit}>
@@ -67,16 +70,18 @@ export default function ClientLogin({ currentContract, onLogin }) {
               onChange={(event) => setPassword(event.target.value)}
             />
           </label>
+
           {loginError && <p className="error">{loginError}</p>}
 
-          <button className="btn primary" type="submit">
-            Login
+          <button className="btn primary" type="submit" disabled={isLoggingIn}>
+            {isLoggingIn ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
+
       <p className="copyright">
         &copy; Copyright {new Date().getFullYear()} Australian Institute of
-        Business. All Rights Reserved.
+        Management. All Rights Reserved.
       </p>
     </div>
   );
