@@ -8,7 +8,7 @@ export default function ClientTable({
 }) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const clientsPerPage = 5;
+  const clientsPerPage = 8;
 
   useEffect(() => {
     setCurrentPage(1);

@@ -72,6 +72,36 @@ export default function EditContractModal({
     }
   }
 
+  async function handleDeleteContract() {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete contract ${contract.contractNumber}? This will also remove all learner records for this contract.`,
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setIsSaving(true);
+      setFormError("");
+
+      const { error } = await supabase
+        .from("contracts")
+        .delete()
+        .eq("id", contract.id);
+
+      if (error) {
+        console.error("Delete contract error:", error);
+        throw new Error("Could not delete this contract.");
+      }
+
+      await onContractUpdated();
+      closeModal();
+    } catch (error) {
+      setFormError(error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal card">
@@ -153,6 +183,15 @@ export default function EditContractModal({
               onClick={closeModal}
             >
               Cancel
+            </button>
+
+            <button
+              className="btn delete"
+              type="button"
+              onClick={handleDeleteContract}
+              disabled={isSaving}
+            >
+              Delete contract
             </button>
 
             <button className="btn upload" type="submit" disabled={isSaving}>

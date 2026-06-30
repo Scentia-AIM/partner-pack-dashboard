@@ -131,6 +131,18 @@ div {
   color: #ffffff;
 }
 
+.btn.delete {
+  background-color: #db4930;
+  border-color: #db4930;
+  color: #ffffff;
+}
+
+.btn.delete:hover {
+  background-color: #ffffff;
+  border-color: #db4930;
+  color: #db4930;
+}
+
 .btn.upload {
   background-color: #ffeafe;
   color: #732d81;
