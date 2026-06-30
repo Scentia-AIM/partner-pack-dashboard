@@ -2,8 +2,11 @@ import AttendancePill from "./AttendancePill";
 import ProgressBar from "./ProgressBar";
 import StatusPill from "./StatusPill";
 
-function formatDate(dateString) {
-  const [year, month, day] = dateString.split("-");
+function formatDate(date) {
+  if (!date) return "No date available";
+
+  const [year, month, day] = date.split("-");
+
   return `${day}/${month}/${year}`;
 }
 
