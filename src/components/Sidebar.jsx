@@ -1,5 +1,5 @@
 import "../styles/sidebar.css";
-import aimLogo from "../assets/aim-logo.png";
+import aimLogo from "../assets/aim-logo.svg";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";

@@ -6,6 +6,7 @@ import StudentLocations from "./clientPages/StudentLocations";
 import AdminFirewall from "./components/AdminFirewall";
 import AccessFirewall from "./components/AccessFirewall";
 import AdminHome from "./adminPages/AdminHome";
+import MobileNav from "./components/MobileNav";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import aimSwoosh from "./assets/aim-swoosh.svg";
 
@@ -14,6 +15,7 @@ function AppFrame({ children, currentContract }) {
     <div className="main">
       <img className="swoosh" src={aimSwoosh} alt="AIM Swoosh" />
       <Sidebar currentContract={currentContract} />
+      {currentContract && <MobileNav currentContract={currentContract} />}
       <div></div>
       {children}
     </div>
