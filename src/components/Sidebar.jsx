@@ -144,17 +144,6 @@ export default function Sidebar({ currentContract }) {
                 Locations
               </NavLink>
             </li>
-
-            <li>
-              <NavLink
-                to={`${clientBasePath}/contact`}
-                className={({ isActive }) =>
-                  isActive ? "menu-item active" : "menu-item"
-                }
-              >
-                Get In Touch
-              </NavLink>
-            </li>
           </ul>
         </div>
       ) : (
@@ -170,9 +159,6 @@ export default function Sidebar({ currentContract }) {
       <div className="container">
         {!isAdminPage ? (
           <div className="details">
-            {/* <p className="date">
-              Last updated: <span>XXXXXXX</span>
-            </p> */}
             <p>
               Contract Number:
               <span> {currentContract?.contract_number}</span>

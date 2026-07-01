@@ -122,10 +122,6 @@
   color: #ffffff;
 }
 
-.sidebar .details p:first-child {
-  color: #d988d5;
-}
-
 .sidebar .details p span {
   font-weight: 600;
 }
@@ -134,4 +130,10 @@
   font-size: 0.75rem;
   font-weight: 400;
   color: #ffffff;
+}
+
+@media (max-width: 1200px) {
+  .sidebar {
+    display: none;
+  }
 }

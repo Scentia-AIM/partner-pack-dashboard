@@ -110,3 +110,61 @@ export default function StudentTable({
     </div>
   );
 }
+
+function StudentMobileCard({ student }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="student-mobile-card">
+      <button
+        className="student-mobile-header"
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div>
+          <p className="student-mobile-name">{student.learnerName}</p>
+          <p className="student-mobile-course">{student.courseName}</p>
+        </div>
+
+        <div className="student-mobile-status">
+          <StatusPill
+            unitsCompleted={student.unitsCompleted}
+            totalUnits={student.totalUnits}
+            lastProgressDate={student.lastProgressDate}
+          />
+
+          <span className="student-mobile-toggle">{isOpen ? "−" : "+"}</span>
+        </div>
+      </button>
+
+      {isOpen && (
+        <div className="student-mobile-body">
+          <div>
+            <span>Location</span>
+            <strong>{student.location || "-"}</strong>
+          </div>
+
+          <div>
+            <span>Progress</span>
+            {student.courseType !== "short_course" ? (
+              <ProgressBar
+                unitsCompleted={student.unitsCompleted}
+                totalUnits={student.totalUnits}
+              />
+            ) : (
+              <AttendancePill
+                attended={student.attended}
+                endDate={student.endDate}
+              />
+            )}
+          </div>
+
+          <div>
+            <span>End date</span>
+            <strong>{formatDate(student.endDate)}</strong>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

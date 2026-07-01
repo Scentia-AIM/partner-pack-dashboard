@@ -257,3 +257,17 @@ input:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+@media (max-width: 1200px) {
+  .main {
+    display: block;
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main .swoosh {
+    width: 115%;
+    opacity: 0.5;
+  }
+}

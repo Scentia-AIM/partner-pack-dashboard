@@ -93,3 +93,15 @@
 .gap-32 {
   gap: 2rem;
 }
+
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+  .col-2 {
+    grid-template-columns: 1fr;
+  }
+  .col-3 {
+    grid-template-columns: 1fr;
+  }
+}

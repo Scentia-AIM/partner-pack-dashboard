@@ -38,3 +38,12 @@
   opacity: 0.5;
   margin: 0;
 }
+@media (max-width: 768px) {
+  .enrolled-courses .course {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .enrolled-courses .course .title h3 {
+    font-size: 0.875rem;
+  }
+}
