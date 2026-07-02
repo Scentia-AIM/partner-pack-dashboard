@@ -142,8 +142,8 @@
 }
 
 .mobile-contract-select {
-  width: auto;
-  padding: 0.5rem 1rem;
+  width: 140px;
+  padding: 0.5rem;
   border-radius: 32px;
   border: none;
   background: #ffffff;
@@ -215,9 +215,5 @@
     transform: translate(-50%, -50%);
     width: 36px;
     height: auto;
-  }
-
-  .main {
-    padding-bottom: 104px;
   }
 }

@@ -173,7 +173,7 @@ export default function Sidebar({ currentContract }) {
         )}
         <p className="copyright">
           &copy; Copyright {new Date().getFullYear()} Australian Institute of
-          Business. All Rights Reserved.
+          Management. All Rights Reserved.
         </p>
       </div>
     </div>

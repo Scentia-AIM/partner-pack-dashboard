@@ -261,7 +261,7 @@ input:disabled {
 @media (max-width: 1200px) {
   .main {
     display: block;
-    padding: 2rem 1rem;
+    padding: 2rem 1rem 7.5rem;
   }
 }
 

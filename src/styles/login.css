@@ -138,3 +138,18 @@
   color: #ffffff;
   text-align: center;
 }
+
+@media (max-width: 1200px) {
+  .login,
+  .not-found,
+  .loading {
+    height: 110vh;
+    padding: 1rem;
+  }
+
+  .login p.copyright,
+  .not-found p.copyright {
+    text-align: center;
+    padding-inline: 1rem;
+  }
+}
